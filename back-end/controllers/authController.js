@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const { User } = require("../models/users");
@@ -180,4 +181,61 @@ async function login(req, res) {
 }
 
 
-module.exports = { register, verifyOtp, login };
+async function logout(req, res) {
+    try {
+        // clear the refresh token cookie
+        res.clearCookie('refreshToken', {
+            httpOnly: true, 
+            secure: process.env.PRODUCTION === 'production',
+            sameSite: 'strict',
+        });
+        res.status(200).json({ message: 'logged out successfully', id: req.user.id });
+    } catch (error) {
+        console.log(error); 
+        
+    }
+}
+
+
+async function forgotPassword(req, res) {
+    try {
+        const { email } = req.body;
+
+        // find the user
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ message: 'user with this email does not exist' });
+        }
+
+        // generate reset link
+        const resetLink = crypto.randomBytes(32).toString('hex');
+
+        // store reset link in the user document
+        user.resetLink = resetLink;
+        user.resetLinkExpires = Date.now() + 5 * 60 * 1000; // 1 hour
+        await user.save();
+
+        // send reset link in the email
+        await sendEmail(
+            user.email,
+            'password reset link',
+            `the password reset link is ${resetLink}`,
+        );
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+async function resetPassword(req, res) {
+    try {
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+module.exports = { register, verifyOtp, login, logout, forgotPassword };
