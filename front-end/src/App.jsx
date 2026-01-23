@@ -10,6 +10,7 @@ export const App = () => {
     <Routes>
       <Route path='/' element={<h1 style={{color: 'red'}}>home page</h1>} /> 
       <Route path='/register' element={<Register />} />
+      <Route path='/login' element={<h1 style={{color: 'blue'}}>login page</h1>} />
     </Routes>
   )
 }
