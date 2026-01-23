@@ -1,0 +1,110 @@
+/* body styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #161e2b;
+}
+
+/* page container styles */
+/* .registerPage-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 100px;
+    height: 100vh;
+    gap: 30px;
+} */
+
+/* form styles */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* input container styles */
+.register-form div {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* input field styles */
+.register-form input {
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    border: 1px solid #b8b6b68f;
+    border-radius: 16px;
+    height: 40px;
+    font-size: 16px;
+    width: 300px;
+}
+.register-form input:hover{
+    border-color: #f7f7f7;
+}
+.register-form label {
+    color: white;
+    font-size: 17px;
+}
+
+/* submit button styles */
+.register-form button {
+    padding: 12px;
+    background-color: #3b48fc;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.register-form .haveAccount {
+    text-align: center;
+    color: white;
+    background-color: transparent;
+    cursor: pointer;
+    border: 1px solid #b8b6b68f;
+}
+
+/* image container styles */
+.instagram-icon-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    height: 100%;
+    width: 100%;
+}
+
+/* main container */
+.registerPage-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* form container styles */
+.registerForm-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #161e2b;
+}
+
+/* divider styles */
+.divider {
+    width: 5px;
+    background-color: #3a475c;
+}
+
+/* eye icon styles */
+.slash-eye-icon {
+    position: relative;
+    top: -32px;
+    left: 260px;
+    color: #ffffff8f;
+    cursor: pointer;
+}
