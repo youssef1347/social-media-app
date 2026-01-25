@@ -25,10 +25,7 @@ async function register(req, res) {
         };
 
         //hashing password
-        const hashedPass = await bcrypt.hash(value.password, 10);
-
-        //generating otp
-        const {otp, otpExpires} = generateOtp();
+        const hashedPass = await bcrypt.hash(value.password, 8);
 
 
         //creating user in db
@@ -36,17 +33,7 @@ async function register(req, res) {
             email: value.email,
             password: hashedPass,
             username: value.username,
-            otp,
-            otpExpires,
         });
-
-
-        //send otp in the email
-        await sendEmail(
-            user.email,
-            'verifying the email with otp',
-            `the otp ${otp}`,
-        );
 
 
         res.status(201).json({
@@ -55,8 +42,44 @@ async function register(req, res) {
             email: user.email
         });
 
+
     } catch (error) {
         console.log(error);
+    }
+}
+
+
+async function sendOtp(req, res) {
+    try {
+        const { email } = req.body;
+
+        // find the user
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ message: 'user with this email does not exist' });
+        }
+
+        // generate otp
+        const { otp, otpExpires } = generateOtp();
+
+        // store otp and otpExpires in the user document
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save();
+
+
+        // send otp in the email
+        await sendEmail(
+            user.email,
+            'verification otp',
+            `the otp ${otp}`,
+        );
+
+        res.status(200).json({ message: 'otp sent to your email' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
     }
 }
 
@@ -138,23 +161,7 @@ async function login(req, res) {
 
         // check if the user is verified
         if (!user.isVerified) {
-            
-            // generate otp
-            const { otp, otpExpires } = generateOtp();
-            
-            // verify user with otp
-            user.otp = otp;
-            user.otpExpires = otpExpires;
-            await user.save();
-
-        // send otp in the email
-        await sendEmail(
-            user.email,
-            'login otp',
-            `the otp ${otp}`,
-        );
-
-        return res.status(400).json({ message: 'please verify your email first' });
+            return res.status(403).json({ message: 'verify your email first', email: user.email });
     }
 
 
@@ -238,4 +245,4 @@ async function resetPassword(req, res) {
 }
 
 
-module.exports = { register, verifyOtp, login, logout, forgotPassword };
+module.exports = { register, verifyOtp, login, logout, forgotPassword, sendOtp, resetPassword };

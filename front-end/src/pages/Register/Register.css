@@ -6,16 +6,6 @@ body {
     background-color: #161e2b;
 }
 
-/* page container styles */
-/* .registerPage-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 100px;
-    height: 100vh;
-    gap: 30px;
-} */
-
 /* form styles */
 .register-form {
     display: flex;
@@ -35,7 +25,7 @@ body {
 .register-form input {
     background-color: transparent;
     color: white;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #b8b6b68f;
     border-radius: 16px;
     height: 40px;
@@ -50,8 +40,8 @@ body {
     font-size: 17px;
 }
 
-/* submit button styles */
-.register-form button {
+/* button styles */
+.registerForm-container button {
     padding: 12px;
     background-color: #3b48fc;
     color: white;
@@ -59,24 +49,44 @@ body {
     border-radius: 16px;
     font-size: 16px;
     cursor: pointer;
+    transition: .3s ease;
 }
-.register-form .haveAccount {
-    text-align: center;
-    color: white;
+button.haveAccount {
     background-color: transparent;
+    border: none;
+    color: #3b48fc;
     cursor: pointer;
-    border: 1px solid #b8b6b68f;
+    border: 2px solid #a09999fd;
 }
-
-/* image container styles */
+button:hover {
+    transform: scale(1.03);
+}
+/* image styles */
 .instagram-icon-container {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     background-color: black;
     height: 100%;
     width: 100%;
+}
+.instagram-icon-container img {
+    width: 170px;
+}
+.instagram-icon-container img:nth-child(1) {
+    margin-bottom: 160px;
+}
+.instagram-icon-container img:nth-child(3) {
+    width: 150px;
+    margin-top: 0;
+}
+.instagram-icon-container h6 {
+    text-align: center;
+    color: #ffffff8f;
+    font-size: 13px;
+    margin-bottom: 0;
 }
 
 /* main container */
