@@ -57,13 +57,14 @@ export const Register = () => {
             const email = response.data.email;
             localStorage.setItem('email', email);
             console.log(response);
-            toast.success("Registration successful! please veridy your email.");
+            toast.success("Registration successful! please verify your email.");
 
             // navigate to verify email page
             go('/verify-email');
 
             // api call to send verification email
-            await api.post('api/auth/send-otp', { email })
+            const otpRes = await api.post('api/auth/send-otp', { email });
+            console.log(otpRes);
 
         } catch (error) {
             setLoading(true);

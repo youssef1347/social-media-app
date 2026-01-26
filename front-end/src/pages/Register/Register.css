@@ -89,7 +89,7 @@ button:hover {
     margin-bottom: 0;
 }
 
-/* main container */
+/* page container */
 .registerPage-container {
     display: flex;
     height: 100vh;

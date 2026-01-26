@@ -79,7 +79,7 @@ async function sendOtp(req, res) {
         res.status(200).json({ message: 'otp sent to your email' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'internal server error' });
+        res.status(500).json({ message: 'internal server error, error from backend' });
     }
 }
 
@@ -90,7 +90,7 @@ async function verifyOtp(req, res) {
 
         //handling error
         if (error) {
-            return res.json({ message: error.details.map((err) => err.message) });
+            return res.status(400).json({ message: error.details.map((err) => err.message) });
         }
 
         const { otp, email } = value;

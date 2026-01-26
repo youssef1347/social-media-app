@@ -1,0 +1,116 @@
+/* page styles */
+.verify-email-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #0c1d29;
+}
+
+/* text styles */
+.verify-email-text-container {
+    color: white;
+    margin-top: 80px;
+    margin-right: 85px;
+}
+.verify-email-text-container h1 {
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.verify-email-text-container h5 {
+    font-size: 16px;
+}
+
+/* back icon styles */
+.back-icon-container {
+    font-size: 26px;
+    position: relative;
+    color: rgb(156, 153, 153)
+}
+.back-icon-container .back-icon {
+    position: absolute;
+    left: 30%;
+    cursor: pointer;
+    top: 32px;
+    font-size: 43px;
+    padding: 8px;
+}
+.back-icon-container .back-icon:hover {
+    background-color: rgba(255, 255, 255, 0.226);
+    border-radius: 50%;
+}
+
+/* form styles */
+.verify-email-form-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+.verify-email-form-container form input {
+    width: 550px;
+    height: 60px;
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.226);
+    background-color: transparent;
+    padding-left: 12px;
+    padding-top: 16px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: white;
+}
+.verify-email-form-container form label {
+    position: absolute;
+    left: 31%;
+    top: 37%;
+    transition: .3s ease;
+    color: rgba(255, 255, 255, 0.226);
+}
+.verify-email-form-container form input:focus {
+    border-color: #f7f7f7;
+}
+.verify-email-form-container form input:hover {
+    border-color: #f7f7f7;
+}
+.verify-email-form-container form input:focus + label {
+    transform: translateY(-14px);
+    font-size: 14px;
+}
+.verify-email-form-container form label.input-has-value {
+    transform: translateY(-14px);
+    font-size: 14px;
+}
+
+/* buttons styles */
+.verify-email-form-container form button {
+    width: 550px;
+    height: 43px;
+    border-radius: 23px;
+    border: none;
+    background-color: #3b48fc;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .3s ease;
+    margin: 12px;
+}
+.verify-email-form-container form .resend-otp-btn {
+    background-color: transparent;
+    border: 1px solid #a0999985;
+}
+
+/* link styles */
+a {
+    color: #3b48fc;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    margin: 35px;
+    justify-content: center;
+}
+a:hover {
+    text-decoration: underline;
+}
