@@ -48,6 +48,7 @@ export const Register = () => {
             // confirm password validation
             if (passwordRef.current.value !== confirmPasswordRef.current.value) {
                 toast.error("Passwords do not match");
+                setLoading(false);
                 return;
             }
 
@@ -62,7 +63,7 @@ export const Register = () => {
             go('/verify-email');
 
             // api call to send verification email
-            await api.post('api/auth/send-otp', { email });
+            await api.post('api/auth/send-otp', { email })
 
         } catch (error) {
             setLoading(true);

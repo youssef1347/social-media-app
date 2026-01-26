@@ -8,8 +8,8 @@ router.post('/verify-otp', verifyOtp);
 router.post('/login', login);
 router.post('/logout', authMiddleware, logout);
 router.post('/forgot-password', forgotPassword);
-router.post('send-otp', sendOtp);
-router.post('reset-password', resetPassword);
+router.post('/send-otp', sendOtp);
+router.post('/reset-password', resetPassword);
 
 
 
