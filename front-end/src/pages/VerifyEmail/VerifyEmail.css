@@ -101,6 +101,11 @@
     background-color: transparent;
     border: 1px solid #a0999985;
 }
+.verify-email-form-container form .disabled-btn {
+    color: #a099991e;
+    background-color: transparent;
+    border: 1px solid #c5c3c34f;
+}
 
 /* link styles */
 a {

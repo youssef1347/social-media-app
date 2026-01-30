@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './VerifyEmail.css'
 import { IoIosArrowBack } from "react-icons/io";
 import { api } from '../../utils/api';
@@ -11,13 +11,22 @@ import { Loading } from '../Loading/Loading';
 export const VerifyEmail = () => {
     // get email from local storage
     const email = localStorage.getItem('email');
-    console.log(email)
 
     // handle loading states
     const [loading, setLoading] = useState(false);
 
     // otp ref
     const otpRef = useRef();
+
+
+    // timer state
+    const [timer, setTimer] = useState(0);
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+
+
+    // handle resend otp state
+    const [isResendOtp, setIsResendOtp] = useState(false);
 
 
     // class names state
@@ -38,7 +47,7 @@ export const VerifyEmail = () => {
     }
 
 
-    // handle on change function
+    // handle allowing only numbers in otp input
     function handleOnChange(ev) {
         const value = ev.target.value;
         setLabelClassName(value ? 'input-has-value' : '');
@@ -59,8 +68,7 @@ export const VerifyEmail = () => {
     // handle submit function
     async function handleSubmit(e) {
         try {
-            setLoading(true);
-
+            
             e.preventDefault();
             console.log('form submitted');
     
@@ -70,7 +78,16 @@ export const VerifyEmail = () => {
                 otp: otpRef.current.value
             };
 
+            if (!data.otp) {
+                toast.error("otp is reuired");
+                return;
+            } else if (data.otp.length < 6) {
+                toast.error('otp must be 6 characters');
+                return;
+            }
+
             const response = await api.post('api/auth/verify-otp', data);
+                setLoading(true);
             console.log(response);
 
             // success handling
@@ -82,17 +99,44 @@ export const VerifyEmail = () => {
             // navigation to home page
             go('/');
         } catch (error) {
-            setLoading(true);
-            console.log(error);
-
-            if (error.response?.data?.message) {
-                toast.error(error.response?.data?.message);
-            }
-
+            toast.error(error.response.data.message);
         } finally {
             setLoading(false);
         }
     }
+
+
+    // handle resend otp
+    async function resendOtp() {
+        try {
+            const response = await api.post('api/auth/send-otp', { email });
+            setIsResendOtp(true);
+            setTimer(60);
+            toast.success('otp sent to your email');
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
+    }
+
+
+// timer function
+    useEffect(() => {
+        if (!isResendOtp) return;
+
+        const interval = setInterval(() => {
+            setTimer(prev => {
+                if (prev <= 1) {
+                    setIsResendOtp(false);
+                    clearInterval(interval);
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [isResendOtp]);
 
 
     // loading page
@@ -100,18 +144,6 @@ export const VerifyEmail = () => {
             return (
                 <Loading />
             )
-    }
-
-
-    // handle resend otp
-    async function resendOtp() {
-        try {
-            const response = await api.post('api/auth/send-otp', email);
-            console.log(response);
-            console.log('first')
-        } catch (error) {
-            console.log(error);
-        }
     }
 
 
@@ -159,11 +191,25 @@ export const VerifyEmail = () => {
                         </button>
 
                         {/* resend otp button */}
-                        <button
-                            className='resend-otp-btn'
-                            onClick={resendOtp}
-                            type="button">I didn't get the code
-                        </button>
+                        {isResendOtp ?
+                            // disabled button
+                            <button
+                                disabled
+                                className='disabled-btn'
+                                type='button'>resend otp
+                            </button> :
+
+                            // resend otp button
+                            <button
+                                className='resend-otp-btn'
+                                onClick={resendOtp}
+                                type="button">
+                                resend otp
+                            </button>}
+                        {/* timer */}
+                        {isResendOtp == true &&
+                            <h6 style={{color: '#3b48fc'}}>{minutes.toString().padStart(2,'0')} : {seconds.toString().padStart(2,'0')}</h6>
+                        }
                     </form>
                     <Link to={'/login'}>I already have an account</Link>
                 </div>
@@ -172,4 +218,3 @@ export const VerifyEmail = () => {
         </>
     )
 }
-
