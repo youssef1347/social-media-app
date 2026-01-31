@@ -61,7 +61,7 @@ async function sendOtp(req, res) {
         }
 
         // generate otp
-        const { otp, otpExpires } = generateOtp();
+        const {otp, otpExpires } = generateOtp();
 
         // store otp and otpExpires in the user document
         user.otp = otp;
