@@ -29,7 +29,7 @@ export const VerifyEmail = () => {
     const [isResendOtp, setIsResendOtp] = useState(false);
 
 
-    // class names state
+    // label class names state
     const [labelClassName, setLabelClassName] = useState('');
 
 
@@ -50,6 +50,8 @@ export const VerifyEmail = () => {
     // handle allowing only numbers in otp input
     function handleOnChange(ev) {
         const value = ev.target.value;
+
+        // change the class name according to the value
         setLabelClassName(value ? 'input-has-value' : '');
 
         // allow only numbers
@@ -65,8 +67,8 @@ export const VerifyEmail = () => {
     }
 
 
-    // handle submit function
-    async function handleSubmit(e) {
+    // handle verify email function
+    async function handleVerifyEmail(e) {
         try {
             
             e.preventDefault();
@@ -166,7 +168,7 @@ export const VerifyEmail = () => {
 
                 {/* form container */}
                 <div className="verify-email-form-container">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleVerifyEmail}>
 
                         {/* otp input */}
                         <input

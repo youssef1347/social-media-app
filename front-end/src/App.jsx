@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import { Toaster } from 'react-hot-toast'
 import { Login } from './pages/Login/Login'
 import { VerifyEmail } from './pages/VerifyEmail/VerifyEmail'
+import { ForgotPassword } from './pages/ForgotPassword/ForgotPassword'
 
 export const App = () => {
   return (
@@ -19,7 +20,8 @@ export const App = () => {
       <Route path='/register' Component={Register} />
       <Route path='/login' Component={Login} />
       <Route path='/verify-email' Component={VerifyEmail} />
-      </Routes>
+      <Route path='/forgot-password' Component={ForgotPassword} />
+    </Routes>
 
       </>
   )

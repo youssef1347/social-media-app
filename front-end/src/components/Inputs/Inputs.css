@@ -1,0 +1,29 @@
+input {
+    width: 550px;
+    height: 60px;
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.226);
+    background-color: transparent;
+    padding-left: 12px;
+    padding-top: 16px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: white;
+}
+label {
+    position: absolute;
+    left: 56%;
+    top: 26%;
+    text-transform: capitalize;
+    font-size: 18px;
+    transition: .3s ease;
+    color: rgba(255, 255, 255, 0.226);
+}
+input:focus + label {
+    transform: translateY(-14px);
+    font-size: 14px;
+}
+label.input-has-value {
+    transform: translateY(-14px);
+    font-size: 14px;
+}
