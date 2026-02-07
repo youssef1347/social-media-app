@@ -6,6 +6,7 @@ import { api } from '../../utils/api';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from '../Loading/Loading';
+import { Inputs } from '../../components/Inputs/Inputs';
 
 
 export const Register = () => {
@@ -116,41 +117,36 @@ export const Register = () => {
                         onSubmit={handleRegister}>
 
                         {/* username input */}
-                        <div>
-                            <label htmlFor="username">username</label>
-                            <input 
-                                className="username-input" 
-                                type="text" 
-                                placeholder='Username'
-                                ref={usernameRef}
+                        <div className='register-username-input-container'>
+                            <Inputs
+                                className='register-username-input'
+                                type='text'
                                 name='username'
                                 id='username'
-                                />
+                                inputRef={usernameRef}
+                                labelValue='username'
+                            />
                         </div>
 
                         {/* email input */}
-                        <div>
-                            <label htmlFor="email">email</label>
-                            <input 
-                                type="email" 
-                                placeholder='Email' 
-                                ref={emailRef}
-                                name='email'
+                        <div className='regsiter-email-input-container'>
+                            <Inputs
+                                type='email'
                                 id='email'
-                                />
+                                name='email'
+                                labelValue='email'
+                                inputRef={emailRef}
+                            />
                         </div>
 
                         {/* password input */}
-                        <div>
-
-                            <label htmlFor="password">password</label>
-                            <input
-                                className="password-input"
-                                placeholder='Password'
-                                type={showPassword ? "text" : "password"}
-                                ref={passwordRef}
-                                name='password'
+                        <div className='register-password-input-container'>
+                            <Inputs
                                 id='password'
+                                type={showPassword ? "text" : "password"}
+                                labelValue='password'
+                                inputRef={passwordRef}
+                                name='password'
                             />
                             {showPassword ? <FaRegEye
                                     className='slash-eye-icon'
@@ -163,13 +159,19 @@ export const Register = () => {
                         </div>
 
                         {/* confirm password input */}
-                        <div>
-                            <label htmlFor="confirmPassword">confirm password</label>
+                        <div className='register-confirmPassword-input-container'>
+                            {/* <label htmlFor="confirmPassword">confirm password</label>
                             <input
                                 type="password"
                                 id="confirmPassword"
                                 placeholder="Confirm Password"
                                 ref={confirmPasswordRef}
+                            /> */}
+                            <Inputs
+                                id='confirm password'
+                                type='password'
+                                inputRef={confirmPasswordRef}
+                                labelValue='confirm password'
                             />
                         </div>
 

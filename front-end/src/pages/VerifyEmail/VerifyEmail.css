@@ -108,7 +108,7 @@
 }
 
 /* link styles */
-a {
+.already-haveAccount-link{
     color: #3b48fc;
     text-decoration: none;
     text-align: center;
@@ -116,6 +116,6 @@ a {
     margin: 35px;
     justify-content: center;
 }
-a:hover {
+.already-haveAccount-link:hover {
     text-decoration: underline;
 }

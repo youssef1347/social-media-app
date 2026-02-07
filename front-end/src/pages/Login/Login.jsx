@@ -1,57 +1,80 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import './Login.css'
 import { FaMeta } from "react-icons/fa6";
 import { IoIosArrowBack } from "react-icons/io";
 import { Inputs } from '../../components/Inputs/Inputs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api';
 import toast from 'react-hot-toast';
+import { Loading } from '../Loading/Loading';
 
 export const Login = () => {
+  // handling error state
+  const [isError, setIsError] = useState(false);
 
-  // handle back function
-  function handleBack() {
-    window.history.back();
-  }
+
+  // handling loading state
+  const [loading, setLoading] = useState(false);
+
 
   // refs
   const emailRef = useRef();
   const passwordRef = useRef();
 
-
   // handle login function
   async function handleLogin(ev) {
     try {
       ev.preventDefault();
-      console.log('login')
+      setLoading(true);
+      console.log("login");
 
       const data = {
         email: emailRef.current.value,
         password: passwordRef.current.value,
-      }
+      };
 
       if (!data.email || !data.password) {
-        toast.error('email and password are required');
+        toast.error("email and password are required");
+        return;
       }
 
-      const response = await api.post('api/auth/login', data);
-      toast.success('login successfully')
+      const response = await api.post("api/auth/login", data);
+      localStorage.setItem('token', response.data.accessToken);
+      toast.success("login successfully");
+      go('/');
       console.log(response);
     } catch (error) {
-      if (error.response?.data?.message) {
-
+      if (error.response?.data?.message !== "verify your email first") {
+        toast.error(error.response?.data?.message);
+        return;
       }
-      console.log(error.response?.data?.message);
+
+      setIsError(true);
       toast.error(error.response?.data?.message);
+      await api.post("api/auth/send-otp");
+    } finally {
+      setLoading(false);
     }
   }
-
 
   // handle navigation
   const navigate = useNavigate();
   function go(endPoint) {
     navigate(endPoint);
   }
+
+  // handle back function
+  function handleBack() {
+    navigate(-1);
+  }
+
+  // loading page
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
+
 
   return (
     <div className="login-main-container">
@@ -78,6 +101,9 @@ export const Login = () => {
         </div>
       </div>
 
+      {/* divider */}
+      <div className="divider"></div>
+
       {/* form container */}
       <div className="login-form-container">
         {/* back icon conatiner */}
@@ -94,21 +120,28 @@ export const Login = () => {
         <form onSubmit={handleLogin}>
           {/* email input */}
           <Inputs
-            type ='email'
-            id ='email'
-            name='email'
-            ref={emailRef}
-            labelValue='email'
+            type="email"
+            id="email"
+            name="email"
+            inputRef={emailRef}
+            labelValue="email"
           />
 
           {/* password input */}
           <Inputs
-            type='password'
-            id='password'
-            name='password'
-            ref={passwordRef}
-            labelValue='password'
+            type="password"
+            id="password"
+            name="password"
+            inputRef={passwordRef}
+            labelValue="password"
           />
+
+          {isError && (
+            <h4 className="verify-email-link">
+              otp sent to your email to verify your email <br />{" "}
+              <Link to={"/verify-email"}>click here</Link>{" "}
+            </h4>
+          )}
 
           {/* submit button */}
           <button className="login-submit-button" type="submit">
@@ -117,18 +150,20 @@ export const Login = () => {
 
           {/* forgot password button */}
           <button
-            onClick={() => go('/forgot-password')}
+            onClick={() => go("/forgot-password")}
             className="forgot-password-button"
-            type="button">
-              forgot password
+            type="button"
+          >
+            forgot password
           </button>
 
           {/* create account button */}
           <button
             className="create-account-button"
-            onClick={() => go('/register')}
-            type="button">
-              Create new account
+            onClick={() => go("/register")}
+            type="button"
+          >
+            Create new account
           </button>
 
           {/* meta logo container */}
@@ -140,4 +175,4 @@ export const Login = () => {
       </div>
     </div>
   );
-}
+};

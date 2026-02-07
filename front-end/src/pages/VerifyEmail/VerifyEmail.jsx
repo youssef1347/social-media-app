@@ -33,17 +33,15 @@ export const VerifyEmail = () => {
     const [labelClassName, setLabelClassName] = useState('');
 
 
-    // handle back function
-    function handleBack() {
-        window.history.back();
-        console.log('back icon clicked');
-    }
-
-
     // handle navigation
     const navigate = useNavigate();
     function go(endPoint) {
         navigate(endPoint);
+    }
+
+    // handle back function
+    function handleBack() {
+        navigate(-1);
     }
 
 
@@ -213,7 +211,9 @@ export const VerifyEmail = () => {
                             <h6 style={{color: '#3b48fc'}}>{minutes.toString().padStart(2,'0')} : {seconds.toString().padStart(2,'0')}</h6>
                         }
                     </form>
-                    <Link to={'/login'}>I already have an account</Link>
+                    <Link
+                        className='already-haveAccount-link'
+                        to={'/login'}>I already have an account</Link>
                 </div>
 
             </div>

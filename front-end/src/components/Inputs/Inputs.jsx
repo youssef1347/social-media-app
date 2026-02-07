@@ -15,6 +15,7 @@ export const Inputs = ({ type, inputRef, id, name, labelValue }) => {
     return (
         <>
             <input
+                className='input'
                 onChange={handleChangeClassName}
                 ref={inputRef}
                 id={id}
@@ -28,3 +29,4 @@ export const Inputs = ({ type, inputRef, id, name, labelValue }) => {
         </>
     )
 }
+

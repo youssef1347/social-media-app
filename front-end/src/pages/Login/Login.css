@@ -121,3 +121,17 @@ form .create-account-button:hover {
     margin-top: 50px;
     font-size: 20px;
 }
+
+/* divider styles */
+.divider {
+    width: 2px;
+}
+
+/* links styles */
+.verify-email-link {
+    color: red;
+    text-align: center;
+}
+.verify-email-link a {
+    color: red;
+}

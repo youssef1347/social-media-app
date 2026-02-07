@@ -1,4 +1,4 @@
-input {
+.input {
     width: 550px;
     height: 60px;
     border-radius: 13px;
@@ -19,7 +19,7 @@ label {
     transition: .3s ease;
     color: rgba(255, 255, 255, 0.226);
 }
-input:focus + label {
+.input:focus + label {
     transform: translateY(-14px);
     font-size: 14px;
 }

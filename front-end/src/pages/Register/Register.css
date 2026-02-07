@@ -10,7 +10,7 @@ body {
 .register-form {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
 }
 
 /* input container styles */
@@ -18,26 +18,33 @@ body {
     background-color: transparent;
     display: flex;
     flex-direction: column;
-    gap: 6px;
 }
 
 /* input field styles */
-.register-form input {
-    background-color: transparent;
-    color: white;
-    padding: 12px;
-    border: 1px solid #b8b6b68f;
-    border-radius: 16px;
-    height: 40px;
-    font-size: 16px;
-    width: 300px;
+
+/* username input styles */
+.register-username-input-container label:nth-child(2) {
+    position: absolute;
+    left: 56%;
+    top: 12%;
 }
-.register-form input:hover{
-    border-color: #f7f7f7;
+
+/* email input styles */
+.regsiter-email-input-container label:nth-child(2) {
+    position: absolute;
+    top: 28%;
 }
-.register-form label {
-    color: white;
-    font-size: 17px;
+
+/* password input styles */
+.register-password-input-container label:nth-child(2) {
+    position: absolute;
+    top: 43%;
+}
+
+/* confirm password styles */
+.register-confirmPassword-input-container label:nth-child(2) {
+    position: absolute;
+    top: 61.5%;
 }
 
 /* button styles */
@@ -113,8 +120,8 @@ button:hover {
 /* eye icon styles */
 .slash-eye-icon {
     position: relative;
-    top: -32px;
-    left: 260px;
+    top: -59px;
+    left: 85%;
     color: #ffffff8f;
     cursor: pointer;
 }
