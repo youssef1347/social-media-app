@@ -125,6 +125,7 @@ export const Register = () => {
                                 id='username'
                                 inputRef={usernameRef}
                                 labelValue='username'
+                                // errorMessage='hello world'
                             />
                         </div>
 
@@ -136,6 +137,7 @@ export const Register = () => {
                                 name='email'
                                 labelValue='email'
                                 inputRef={emailRef}
+                                // errorMessage='hello world'
                             />
                         </div>
 
@@ -147,6 +149,7 @@ export const Register = () => {
                                 labelValue='password'
                                 inputRef={passwordRef}
                                 name='password'
+                                errorMessage='hello world'
                             />
                             {showPassword ? <FaRegEye
                                     className='slash-eye-icon'
@@ -160,18 +163,12 @@ export const Register = () => {
 
                         {/* confirm password input */}
                         <div className='register-confirmPassword-input-container'>
-                            {/* <label htmlFor="confirmPassword">confirm password</label>
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="Confirm Password"
-                                ref={confirmPasswordRef}
-                            /> */}
                             <Inputs
                                 id='confirm password'
                                 type='password'
                                 inputRef={confirmPasswordRef}
                                 labelValue='confirm password'
+                                // errorMessage='hello world'
                             />
                         </div>
 

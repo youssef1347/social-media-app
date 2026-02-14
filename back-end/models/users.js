@@ -10,6 +10,8 @@ const userSchema = mongoose.Schema({
     isVerified: { type: Boolean, default: false },
     otp: { type: String, maxLength: 6 },
     otpExpires: { type: Date },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     avatar: { type: String, default: 'https://www.pinterest.com/pin/avatar-picture--252201647877605769/' },

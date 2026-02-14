@@ -1,4 +1,7 @@
+const { Comment } = require("../models/comments");
+const { Post } = require("../models/posts");
 const { User } = require("../models/users");
+const { commentSchema } = require("../validation/commentValidation");
 
 
 
@@ -55,32 +58,43 @@ async function getFollowing(req, res) {
 async function follow(req, res) {
     try {
         // get user followed by
+        const currentUserId = req.user.id;
+        const currentUser = await User.findById(currentUserId);
 
-        const followedById = req.user.id;
-        const followedByUser = await User.findById(followedById);
-
-        if (!followedByUser) return res.status(404).json({ message: 'user not found' });
+        if (!currentUser) return res.status(401).json({ message: 'Unauthorized' });
 
         // get user that get followed
-        const getFollowedId = req.params.id;
-        const getFollowedUser = await User.findById(getFollowedId);
+        const targetUserId = req.params.id;
+        const targetUser = await User.findById(targetUserId);
 
-        if (!getFollowedUser) return res.status(404).json({ message: "user not found" });
+        if (!targetUser) return res.status(404).json({ message: "user not found" });
 
         // if the user try to follow him self
-        if (followedById == getFollowedId) return res.status(400).json({ message: "you can't follow your self" });
+        if (currentUserId == targetUserId) return res.status(400).json({ message: "you can't follow your self" });
 
         // if the user already follows the another user
-        if (followedByUser.following.includes(getFollowedId)) return res.status(400).json({ message: 'you already follows this user' });
+        if (currentUser.following.includes(targetUserId)) {
+            // remove the target user from following list of current user
+            await currentUser.updateOne({
+                $pull: { following: targetUserId }
+            });
+
+            // remove the current user from followers list of target user
+            await targetUser.updateOne({
+                $pull: { followers: currentUserId }
+            });
+
+            return res.json({ message: 'unfollowed successfully' });
+        }
 
         // update the followers list of the user that get followed
-        await getFollowedUser.updateOne({
-            $addToSet: { followers: followedById }
+        await targetUser.updateOne({
+            $addToSet: { followers: currentUserId }
         });
 
         // update the following list of the users thats follows another user
-        await followedByUser.updateOne({
-            $addToSet: { following: getFollowedId }
+        await currentUser.updateOne({
+            $addToSet: { following: targetUserId }
         });
 
             res.json({ message: "followed successfully" });
@@ -90,43 +104,4 @@ async function follow(req, res) {
 }
 
 
-// user unFollow another user function
-async function unFollow(req, res) {
-    try {
-        // get user followed by
-
-        const followedById = req.user.id;
-        const followedByUser = await User.findById(followedById);
-
-        if (!followedByUser) return res.status(404).json({ message: 'user not found' });
-
-        // get user that get followed
-        const getFollowedId = req.params.id;
-        const getFollowedUser = await User.findById(getFollowedId);
-
-        if (!getFollowedUser) return res.status(404).json({ message: "user not found" });
-
-        // if the user try to follow him self
-        if (followedById == getFollowedId) return res.status(400).json({ message: "you can't follow your self" });
-
-        // if the user already follows the another user
-        if (!followedByUser.following.includes(getFollowedId)) return res.status(400).json({ message: 'you already follows this user' });
-
-        // update the followers list of the user that get followed
-        await getFollowedUser.updateOne({
-            $pull: { followers: followedById }
-        });
-
-        // update the following list of the users thats follows another user
-        await followedByUser.updateOne({
-            $pull: { following: getFollowedId }
-        });
-
-            res.json({ message: "followed successfully" });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-module.exports = { getUserProfile, getFollowers, getFollowing, follow, unFollow };
+module.exports = { getUserProfile, getFollowers, getFollowing, follow };

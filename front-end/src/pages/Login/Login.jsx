@@ -125,6 +125,7 @@ export const Login = () => {
             name="email"
             inputRef={emailRef}
             labelValue="email"
+            errorMessage='hello world'
           />
 
           {/* password input */}
@@ -134,12 +135,13 @@ export const Login = () => {
             name="password"
             inputRef={passwordRef}
             labelValue="password"
+            errorMessage='hello world'
           />
 
           {isError && (
             <h4 className="verify-email-link">
-              otp sent to your email to verify your email <br />{" "}
-              <Link to={"/verify-email"}>click here</Link>{" "}
+              otp sent to your email to verify your email <br />
+              <Link to={"/verify-email"}>click here</Link>
             </h4>
           )}
 
