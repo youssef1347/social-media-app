@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import './ForgotPassword.css'
+import './ForgotPassword.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { Inputs } from '../../components/Inputs/Inputs';
