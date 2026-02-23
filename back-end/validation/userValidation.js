@@ -18,7 +18,7 @@ const verifyOtpSchema = joi.object({
 
 const resetPasswordSchema = joi.object({
     token: joi.string().required(),
-    newPassword: joi.string().required(),
+    newPassword: joi.string().min(8).required(),
 });
 
 module.exports = { loginSchema, registerSchema, verifyOtpSchema, resetPasswordSchema };
