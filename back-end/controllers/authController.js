@@ -13,8 +13,11 @@ async function register(req, res) {
     try {
         const { error, value } = registerSchema.validate(req.body, { abortEarly: false });
 
+
         if (error) {
-            return res.status(400).json({ message: error.details.map((err) => err.message) });
+            const errMessage = error.details.map((err) => err.message);
+            const errPath = error.details.map((err) => err.path);
+            return res.status(400).json({ message: errMessage, path: errPath });
         };
 
         //check if this email already exists
@@ -45,6 +48,7 @@ async function register(req, res) {
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'internal server error' });
     }
 }
 
@@ -79,7 +83,7 @@ async function sendOtp(req, res) {
         res.status(200).json({ message: 'otp sent to your email' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'internal server error, error from backend' });
+        res.status(500).json({ message: 'internal server error' });
     }
 }
 
@@ -184,7 +188,7 @@ async function login(req, res) {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({message: 'error from backend'})
+        res.status(500).json({ message: 'internal server error' });
     }
 }
 

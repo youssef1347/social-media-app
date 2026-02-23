@@ -6,12 +6,11 @@ function roleMiddleware(...roles) {
             return res.status(401).json({ message: 'unauthorized' });
         }
 
-        const { id, role } = req.user;
-        const userId = req.params.id;
+        const { role } = req.user;
 
         // check if the roles includes user role
         const isInclude = roles.includes(role);
-        if (!isInclude && id !== userId) {
+        if (!isInclude) {
             return res.status(403).json({ message: "you can't access this page" });
         }
 
@@ -19,3 +18,5 @@ function roleMiddleware(...roles) {
         next();
     }
 }
+
+module.exports = { roleMiddleware };

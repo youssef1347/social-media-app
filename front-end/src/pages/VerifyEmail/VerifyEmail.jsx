@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import './VerifyEmail.css'
+import './VerifyEmail.css';
 import { IoIosArrowBack } from "react-icons/io";
 import { api } from '../../utils/api';
 import { toast } from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import { Loading } from '../Loading/Loading';
+import { Inputs } from '../../components/Inputs/Inputs';
 
 
 
@@ -19,6 +20,10 @@ export const VerifyEmail = () => {
     const otpRef = useRef();
 
 
+    // error message state
+    const [errorMessage, setErrorMessage] = useState('');
+
+
     // timer state
     const [timer, setTimer] = useState(0);
     const minutes = Math.floor(timer / 60);
@@ -27,10 +32,6 @@ export const VerifyEmail = () => {
 
     // handle resend otp state
     const [isResendOtp, setIsResendOtp] = useState(false);
-
-
-    // label class names state
-    const [labelClassName, setLabelClassName] = useState('');
 
 
     // handle navigation
@@ -70,8 +71,9 @@ export const VerifyEmail = () => {
         try {
             
             e.preventDefault();
+            setLoading(true);
             console.log('form submitted');
-    
+
             // submit logic
             const data = {
                 email,
@@ -79,15 +81,15 @@ export const VerifyEmail = () => {
             };
 
             if (!data.otp) {
-                toast.error("otp is reuired");
+                setErrorMessage('otp is required');
                 return;
-            } else if (data.otp.length < 6) {
-                toast.error('otp must be 6 characters');
+            } else if (data.otp.length != 6) {
+                setErrorMessage("otp must be 6 characters");
                 return;
             }
 
             const response = await api.post('api/auth/verify-otp', data);
-                setLoading(true);
+            // setLoading(true);
             console.log(response);
 
             // success handling
@@ -99,7 +101,7 @@ export const VerifyEmail = () => {
             // navigation to home page
             go('/');
         } catch (error) {
-            toast.error(error.response.data.message);
+            setErrorMessage(error.response.data.message);
         } finally {
             setLoading(false);
         }
@@ -116,7 +118,7 @@ export const VerifyEmail = () => {
             console.log(response);
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            setErrorMessage(error.response.data.message);
         }
     }
 
@@ -169,19 +171,19 @@ export const VerifyEmail = () => {
                     <form onSubmit={handleVerifyEmail}>
 
                         {/* otp input */}
-                        <input
-                            type="text"
-                            id='otp'
-                            onChange={handleOnChange}
-                            className='verify-email-input'
-                            maxLength={6}
-                            name='otp'
-                            ref={otpRef}
+                        <div className="otp-input-container">
+
+                            <Inputs
+                                id='otp'
+                                name='otp'
+                                type='text'
+                                inputRef={otpRef}
+                                labelValue='confirmation code'
+                                onChangeFunction={handleOnChange}
+                                errorMessage={errorMessage}
                             />
-                        <label
-                            className={labelClassName}
-                            htmlFor="otp">Confirmation code
-                        </label>
+                        </div>
+
 
                         {/* submit button */}
                         <button

@@ -1,21 +1,18 @@
+const { Comment } = require("../models/comments");
 const { Post } = require("../models/posts");
 const { User } = require("../models/users");
 const { commentSchema } = require("../validation/commentValidation");
 
 
-
-// comment on post function
-async function comment(req, res) {
+// create comment function
+async function createComment(req, res) {
     try {
+        // get post by id
         const postId = req.params.id;
         const post = await Post.findById(postId);
-
         if (!post) return res.status(404).json({ message: 'post not found' });
 
         const userId = req.user.id;
-        const user = await User.findById(userId);
-
-        if (!user) return res.status(401).json({ message: 'Unauthorized' });;
 
         const { error, value } = commentSchema.validate(req.body, { abortEarly: false });
 
@@ -23,16 +20,90 @@ async function comment(req, res) {
 
         const { commentText } = value;
 
-        await Comment.create({
+        // create comment
+        const comment = await Comment.create({
             commentText,
             postId,
             userId,
         });
 
-        res.status(201).json({ message: 'comment created' });
+        res.status(201).json({ message: 'comment created', comment });
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'internal server error' });
     }
 }
 
-module.exports = { comment };
+
+// edit comment
+async function editComment(req, res) {
+    try {
+        const { commentText } = req.body;
+        const commentId = req.params.id;
+        const userId = req.user.id;
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) return res.status(404).json({ message: 'comment not found' });
+
+        if (comment.userId != userId) return res.status(403).json({ message: 'you cannot edit this comment' });
+
+        // update comment
+        comment.commentText = commentText;
+        await comment.save();
+
+        res.json({ message: 'comment updated', comment });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+// delete comment
+async function deleteComment(req, res) {
+    try {
+        const commentId = req.params.id;
+        const userId = req.user.id;
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) return res.status(404).json({ message: 'comment not found' });
+
+        if (comment.userId != userId) return res.status(403).json({ message: 'you cannot delete this comment' });
+
+        await Comment.deleteOne({ _id: commentId });
+
+        res.json({ message: 'comment deleted', comment });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+// like comment
+async function likeComment(req, res) {
+    try {
+        const commentId = req.params.id;
+        const userId = req.user.id;
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) return res.status(404).json({ message: 'comment not found' });
+
+        const isLiked = comment.likes.includes(userId);
+        if (isLiked) {
+            comment.likes.filter((id) => id != userId);
+            await comment.save();
+            res.json({ message: 'unliked comment' });
+        }
+
+        comment.likes.push(userId);
+        await comment.save();
+        res.json({ message: 'comment liked', comment, likes: comment.likes.length });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+module.exports = { createComment, editComment, deleteComment, likeComment };

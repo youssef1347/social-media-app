@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #161e2b;
+    background-color: #161e2b !important;
 }
 
 /* form styles */
@@ -26,25 +26,41 @@ body {
 .register-username-input-container label:nth-child(2) {
     position: absolute;
     left: 56%;
-    top: 12%;
+    top: 11%;
+}
+.register-username-input-container p:nth-child(3) {
+    position: absolute;
+    top: 18%;
 }
 
 /* email input styles */
 .regsiter-email-input-container label:nth-child(2) {
     position: absolute;
-    top: 28%;
+    top: 27%;
+}
+.regsiter-email-input-container p:nth-child(3) {
+    position: absolute;
+    top: 34%;
 }
 
 /* password input styles */
 .register-password-input-container label:nth-child(2) {
     position: absolute;
-    top: 43%;
+    top: 42%;
+}
+.register-password-input-container p:nth-child(3) {
+    position: absolute;
+    top: 49%;
 }
 
 /* confirm password styles */
 .register-confirmPassword-input-container label:nth-child(2) {
     position: absolute;
-    top: 61.5%;
+    top: 60%;
+}
+.register-confirmPassword-input-container p:nth-child(3) {
+    position: absolute;
+    top: 67%;
 }
 
 /* button styles */

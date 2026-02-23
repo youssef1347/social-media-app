@@ -35,6 +35,7 @@ export const Login = () => {
 
       if (!data.email || !data.password) {
         toast.error("email and password are required");
+        
         return;
       }
 
@@ -117,26 +118,32 @@ export const Login = () => {
         </div>
 
         {/* form */}
-        <form onSubmit={handleLogin}>
+        <form
+          className='login-form'
+          onSubmit={handleLogin}>
           {/* email input */}
-          <Inputs
-            type="email"
-            id="email"
-            name="email"
-            inputRef={emailRef}
-            labelValue="email"
-            errorMessage='hello world'
-          />
+          <div className="login-email-input-container">
+            <Inputs
+              type="email"
+              id="email"
+              name="email"
+              inputRef={emailRef}
+              labelValue="email"
+              errorMessage='hello'
+            />
+          </div>
 
           {/* password input */}
-          <Inputs
-            type="password"
-            id="password"
-            name="password"
-            inputRef={passwordRef}
-            labelValue="password"
-            errorMessage='hello world'
-          />
+          <div className="login-password-input-container">
+            <Inputs
+              type="password"
+              id="password"
+              name="password"
+              inputRef={passwordRef}
+              labelValue="password"
+              errorMessage='hello'
+            />
+          </div>
 
           {isError && (
             <h4 className="verify-email-link">

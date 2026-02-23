@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const { connectDatabase } = require("./utils/db");
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 const { rateLimit } = require("express-rate-limit");
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors({ origin: '*', credentials: true }));
 app.use(limiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
 
 const PORT = process.env.PORT || 3000;
 

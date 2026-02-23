@@ -35,7 +35,7 @@
 }
 
 /* input styles */
-.login-form-container form label:nth-child(4) {
+.login-password-input-container label:nth-child(2) {
     position: absolute;
     left: 56%;
     top: 39%;

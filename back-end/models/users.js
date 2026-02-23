@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema({
     resetPasswordExpires: { type: Date },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
     avatar: { type: String, default: 'https://www.pinterest.com/pin/avatar-picture--252201647877605769/' },
     bio: { type: String, default: '' },
 }, { timestamps: true });

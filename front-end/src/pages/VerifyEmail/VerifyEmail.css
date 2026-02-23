@@ -50,38 +50,19 @@
     justify-content: center;
     margin-top: 50px;
 }
-.verify-email-form-container form input {
-    width: 550px;
-    height: 60px;
-    border-radius: 13px;
-    border: 1px solid rgba(255, 255, 255, 0.226);
-    background-color: transparent;
-    padding-left: 12px;
-    padding-top: 16px;
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: white;
-}
-.verify-email-form-container form label {
+.otp-input-container label:nth-child(2) {
     position: absolute;
     left: 31%;
-    top: 37%;
+    top: 35%;
     transition: .3s ease;
     color: rgba(255, 255, 255, 0.226);
 }
-.verify-email-form-container form input:focus {
-    border-color: #f7f7f7;
-}
-.verify-email-form-container form input:hover {
-    border-color: #f7f7f7;
-}
-.verify-email-form-container form input:focus + label {
+.otp-input-container label.input-has-value {
     transform: translateY(-14px);
     font-size: 14px;
 }
-.verify-email-form-container form label.input-has-value {
-    transform: translateY(-14px);
-    font-size: 14px;
+.otp-input-container p:nth-child(3) {
+    top: 42%;
 }
 
 /* buttons styles */
@@ -96,6 +77,7 @@
     cursor: pointer;
     transition: .3s ease;
     margin: 12px;
+    margin-top: 22px;
 }
 .verify-email-form-container form .resend-otp-btn {
     background-color: transparent;

@@ -1,0 +1,45 @@
+/* icon conatiner styles */
+.navbar-icons-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgb(24, 24, 24);
+    width: 6%;
+    height: 100vh;
+    padding: 15px;
+}
+
+/* icons style */
+.navbar-icons-container * {
+    color: white;
+    font-size: 30px;
+}
+.navbar-icons-container *:hover {
+    cursor: pointer;
+}
+
+.navbar-container {
+    display: flex;
+    color: white;
+    background-color: rgb(24, 24, 24);
+}
+
+/* icon names styles */
+.navbar-icon-name-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 15px;
+    margin: 0;
+    justify-content: space-between;
+    transform: translateX(-200%);
+    opacity: 0;
+    transition: .5s ease;
+}
+.navbar-icons-container:hover + .navbar-icon-name-container {
+    transform: translateX(0);
+    opacity: 1;
+}
+.navbar-icons-container *:hover + .navbar-icon-name-container {
+    transform: translateX(0);
+    opacity: 1;
+}

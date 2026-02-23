@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useReducer } from 'react'
 import './Register.css'
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
@@ -11,6 +11,20 @@ import { Inputs } from '../../components/Inputs/Inputs';
 
 export const Register = () => {
     const [loading, setLoading] = useState(false);
+
+    function reducer(state, action) {
+        switch (action.type) {
+            case 'SET_ERRORS': {
+                return {
+                    ...state,
+                    errors: action.payload
+                };
+            }
+        }
+    }
+
+    const [state, dispatch] = useReducer(reducer, { errors: {} });
+    console.log(state)
 
 
     // show password function
@@ -36,8 +50,10 @@ export const Register = () => {
     async function handleRegister(e) {
         e.preventDefault();
         console.log('register button clicked');
+        dispatch({ type: 'SET_ERRORS', payload: {} });
 
         try {
+
             setLoading(true);
 
             const data = {
@@ -46,9 +62,27 @@ export const Register = () => {
             password: passwordRef.current.value,
             }
 
+            if (!data.email || !data.username || !data.password) {
+                // setErrorMessage('email is required');
+                dispatch({
+                    type: 'SET_ERRORS', payload:
+                    {
+                        email: !data.email ? 'email is required' : '',
+                        password: !data.password ? 'password is required' : '',
+                        username: !data.username ? 'username is required' : '',
+                    }
+                });
+                // console.log(payload)
+                return;
+            }
+
             // confirm password validation
             if (passwordRef.current.value !== confirmPasswordRef.current.value) {
-                toast.error("Passwords do not match");
+                dispatch({
+                    type: 'SET_ERRORS', payload: {
+                        password: `passwords don't match`
+                    }
+                });
                 setLoading(false);
                 return;
             }
@@ -68,15 +102,18 @@ export const Register = () => {
             console.log(otpRes);
 
         } catch (error) {
-            setLoading(true);
+            // setLoading(true);
 
             // error handling
             if (error.response?.data?.messages) {
                 error.response.data.messages.forEach(msg => {
+                    console.log(msg);
                     toast.error(msg);
                 });
             } else if (error.response?.data?.message) {
                 toast.error(error.response.data.message);
+                dispatch({type: 'SET_ERRORS', payload: {email: error.response.data.message.split(' ').includes('email') ? error.response.data.message : '' }})
+                console.log(error.response.data.message);
             } else {
                 toast.error('An unexpected error occurred.');
             }
@@ -125,7 +162,7 @@ export const Register = () => {
                                 id='username'
                                 inputRef={usernameRef}
                                 labelValue='username'
-                                // errorMessage='hello world'
+                                errorMessage={state.errors.username}
                             />
                         </div>
 
@@ -137,7 +174,7 @@ export const Register = () => {
                                 name='email'
                                 labelValue='email'
                                 inputRef={emailRef}
-                                // errorMessage='hello world'
+                                errorMessage={state.errors.email}
                             />
                         </div>
 
@@ -149,7 +186,7 @@ export const Register = () => {
                                 labelValue='password'
                                 inputRef={passwordRef}
                                 name='password'
-                                errorMessage='hello world'
+                                errorMessage={state.errors.password}
                             />
                             {showPassword ? <FaRegEye
                                     className='slash-eye-icon'
@@ -168,7 +205,7 @@ export const Register = () => {
                                 type='password'
                                 inputRef={confirmPasswordRef}
                                 labelValue='confirm password'
-                                // errorMessage='hello world'
+                                errorMessage={state.errors.password}
                             />
                         </div>
 
