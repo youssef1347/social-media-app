@@ -277,7 +277,18 @@ async function resetPassword(req, res) {
         // save
         await user.save();
 
-        res.json({ message: 'password changed' });
+        // generate tokens
+        const { refreshToken, accessToken } = generateTokens(user);
+
+        // store refresh token in cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.PRODUCTION === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        res.json({ message: 'password changed', accessToken });
 
     } catch (error) {
         console.log(error);

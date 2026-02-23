@@ -35,9 +35,12 @@ export const ResetPassword = () => {
             if (!password) {
                 setErrorMessage('password is required');
                 return;
+            } else if (password.length < 8) {
+                setErrorMessage('password must be at least 8 charactars');
+                return;
             }
 
-            const response = await api.put('api/auth/reset-password', { password });
+            const response = await api.put('api/auth/reset-password', { newPassword: password });
             console.log(response);
         } catch (error) {
             console.log(error);
@@ -59,7 +62,7 @@ export const ResetPassword = () => {
             {/* text container */}
             <div className="reset-password-text-container">
                 <h2>Reset your password</h2>
-                <p>Create a password with at least 6 letters and numbers. You’ll need this password <br /> to log into your account.</p>
+                <p>Create a password with at least 8 letters and numbers. You’ll need this password <br /> to log into your account.</p>
             </div>
 
             <form
