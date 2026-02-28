@@ -1,21 +1,33 @@
-import React, { useRef, useState } from 'react'
-import './Login.css'
+import React, { useReducer, useRef, useState } from "react";
+import "./Login.css";
 import { FaMeta } from "react-icons/fa6";
 import { IoIosArrowBack } from "react-icons/io";
-import { Inputs } from '../../components/Inputs/Inputs';
-import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../../utils/api';
-import toast from 'react-hot-toast';
-import { Loading } from '../Loading/Loading';
+import { Inputs } from "../../components/Inputs/Inputs";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../../utils/api";
+import toast from "react-hot-toast";
+import { Loading } from "../Loading/Loading";
 
 export const Login = () => {
-  // handling error state
+  // handling error states
   const [isError, setIsError] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState('');
 
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case "SET_ERROR_MESSAGE": {
+          return { ...state, errorMessage: action.payload };
+        }
+        default:
+          return state;
+      }
+    },
+    { errorMessage: "" },
+  );
 
   // handling loading state
   const [loading, setLoading] = useState(false);
-
 
   // refs
   const emailRef = useRef();
@@ -34,24 +46,31 @@ export const Login = () => {
       };
 
       if (!data.email || !data.password) {
-        toast.error("email and password are required");
-        
+        dispatch({
+          type: "SET_ERROR_MESSAGE",
+          payload: {
+            email: !data.email ? "email is required" : "",
+            password: !data.password ? "password is required" : "",
+          },
+        });
+        setLoading(false);
         return;
       }
 
       const response = await api.post("api/auth/login", data);
-      localStorage.setItem('token', response.data.accessToken);
+      localStorage.setItem("token", response.data.accessToken);
       toast.success("login successfully");
-      go('/');
+      go("/");
       console.log(response);
     } catch (error) {
       if (error.response?.data?.message !== "verify your email first") {
+        
         toast.error(error.response?.data?.message);
         return;
       }
 
-      setIsError(true);
       toast.error(error.response?.data?.message);
+      setIsError(true);
       await api.post("api/auth/send-otp");
     } finally {
       setLoading(false);
@@ -71,11 +90,8 @@ export const Login = () => {
 
   // loading page
   if (loading) {
-    return (
-      <Loading />
-    )
+    return <Loading />;
   }
-
 
   return (
     <div className="login-main-container">
@@ -118,9 +134,7 @@ export const Login = () => {
         </div>
 
         {/* form */}
-        <form
-          className='login-form'
-          onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleLogin}>
           {/* email input */}
           <div className="login-email-input-container">
             <Inputs
@@ -129,7 +143,7 @@ export const Login = () => {
               name="email"
               inputRef={emailRef}
               labelValue="email"
-              errorMessage='hello'
+              errorMessage={state.errorMessage.email}
             />
           </div>
 
@@ -141,7 +155,7 @@ export const Login = () => {
               name="password"
               inputRef={passwordRef}
               labelValue="password"
-              errorMessage='hello'
+              errorMessage={state.errorMessage.password}
             />
           </div>
 

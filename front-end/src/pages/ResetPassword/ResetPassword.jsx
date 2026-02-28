@@ -42,6 +42,12 @@ export const ResetPassword = () => {
 
             const response = await api.put('api/auth/reset-password', { newPassword: password });
             console.log(response);
+
+            // set token in local storage
+            localStorage.setItem('token', response.data.accessToken);
+
+            // navigation to home
+            navigate('/');
         } catch (error) {
             console.log(error);
             setErrorMessage(error.response.data.message);

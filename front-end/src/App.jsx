@@ -9,6 +9,7 @@ import { ForgotPassword } from './pages/ForgotPassword/ForgotPassword';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Home } from './pages/Home/Home';
 import { ResetPassword } from './pages/ResetPassword/ResetPassword';
+import { Profile } from './pages/Profile/Profile';
 
 export const App = () => {
   return (
@@ -20,12 +21,13 @@ export const App = () => {
     {/* auth pages routes */}
 
     <Routes>
-        <Route path='/' Component={Home} />
+      <Route path='/' Component={Home} />
       <Route path='/register' Component={Register} />
       <Route path='/login' Component={Login} />
       <Route path='/verify-email' Component={VerifyEmail} />
       <Route path='/forgot-password' Component={ForgotPassword} />
       <Route path='/reset-password' Component={ResetPassword} />
+      <Route path='/profile/:id' Component={Profile} />
     </Routes>
 
       </>

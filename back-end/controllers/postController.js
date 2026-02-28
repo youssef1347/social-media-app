@@ -1,17 +1,21 @@
 const { Comment } = require("../models/comments");
 const { Post } = require("../models/posts");
 const { User } = require("../models/users");
+const { Notification } = require("../models/notifications");
 
 
 // create post
 async function createPost(req, res) {
     try {
-        const images = req.files.map((file) => file.path);
+        const mediaUrl = req.files.map((file) => file.path);
+        const mediaType = req.files[0].mimetype.startsWith('image') ? 'image' : 'video';
+        console.log(req.files);
         const { caption } = req.body;
         const userId = req.user.id;
 
         const post = await Post.create({
-            images,
+            mediaUrl,
+            mediaType,
             caption,
             userId
         });
@@ -21,6 +25,11 @@ async function createPost(req, res) {
         console.log(error);
         res.status(500).json({ message: 'internal server error' });
     }
+}
+
+function test(req, res) {
+    console.log(req.files);
+    res.json({ message: 'test route' });
 }
 
 
@@ -63,6 +72,8 @@ async function deletePost(req, res) {
         // check if the user is the post owner
         if (userId != post.userId) return res.status(403).json({ message: 'you cannot delete this post' });
 
+
+        await post.deleteOne({_id: postId});
         res.json({ message: 'post deleted', post });
     } catch (error) {
         console.log(error);
@@ -113,6 +124,14 @@ async function likePost(req, res) {
             // like post
             post.likes.push(userId);
             user.likedPosts.push(postId);
+
+            // create notfication for post owner
+            await Notification.create({
+                type: 'likedPost',
+                sender: userId,
+                user: post.userId,
+                post: postId,
+            });
         }
 
         await post.save();
@@ -161,4 +180,62 @@ async function getPostComments(req, res) {
 }
 
 
-module.exports = { likePost, createPost, editPost, getPostById, deletePost, getLikedPosts, getPostComments };
+// repost post function
+async function repost(req, res) {
+    try {
+        const userId = req.user.id;
+        const postId = req.params.id;
+
+        // get user
+        const user = await User.findById(userId);
+        if (!user) return res.status(401).json({ message: 'Unauthorized' });
+
+        // get post
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: 'post not found' });
+
+        // get post onwer
+        const postOwner = await User.findById(post.userId);
+
+
+        // check if the user already reposted the post and remove repost
+        if (user.repostedPosts.includes(postId)) {
+            await user.updateOne({
+                $pull: { repostedPosts: postId }
+            });
+            res.json({ message: 'unreposted post' });
+        }
+
+        // repost post
+        await user.updateOne({
+            $push: { repostedPosts: postId }
+        });
+
+        // create notification for post owner
+        await Notification.create({
+            type: 'respostedYourPost',
+            sender: userId,
+            user: postOwner._id,
+            post: postId,
+        });
+
+
+        res.json({ message: 'reposted post and notification sent' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+module.exports = {
+    likePost,
+    createPost,
+    editPost,
+    getPostById,
+    deletePost,
+    getLikedPosts,
+    getPostComments,
+    repost,
+    test,
+};

@@ -92,6 +92,9 @@ export const VerifyEmail = () => {
             // setLoading(true);
             console.log(response);
 
+            // set token in local storage
+            localStorage.setItem('token', response.data.accessToken);
+
             // success handling
             toast.success("Email verified successfully!");
 

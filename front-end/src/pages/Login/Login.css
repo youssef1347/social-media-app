@@ -36,9 +36,24 @@
 
 /* input styles */
 .login-password-input-container label:nth-child(2) {
-    position: absolute;
     left: 56%;
-    top: 39%;
+    top: 44.5%;
+}
+.login-password-input-container p:nth-child(3) {
+    left: 55%;
+    top: 52%;
+}
+
+.login-email-input-container label:nth-child(2) {
+    left: 56%;
+    top: 29%;
+}
+.login-email-input-container p:nth-child(3) {
+    left: 55%;
+    top: 37%;
+}
+.login-email-input-container input:nth-child(1) {
+    margin-bottom: 40px;
 }
 
 /* text styles */
@@ -67,7 +82,7 @@
 /* back icon styles */
 .back-icon-container {
     position: absolute;
-    bottom: 41px;
+    bottom: 75px;
     left: -40%;
 }
 
@@ -118,7 +133,7 @@ form .create-account-button:hover {
     color: white;
     gap: 10px;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 26px;
     font-size: 20px;
 }
 
@@ -129,9 +144,10 @@ form .create-account-button:hover {
 
 /* links styles */
 .verify-email-link {
-    color: red;
+    color: rgb(250, 45, 45);
     text-align: center;
+    font-size: 20px;
 }
 .verify-email-link a {
-    color: red;
+    color: rgb(250, 45, 45);
 }

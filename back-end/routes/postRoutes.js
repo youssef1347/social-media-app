@@ -8,6 +8,8 @@ const {
     deletePost,
     getLikedPosts,
     getPostComments,
+    test,
+    repost,
 } = require("../controllers/postController");
 const { uploads } = require("../utils/uploads");
 const { roleMiddleware } = require("../middlewares/roleMiddleware");
@@ -25,5 +27,7 @@ router.patch("/:id/edit", authMiddleware, editPost);
 router.delete("/:id/delete", authMiddleware, roleMiddleware, deletePost);
 router.get("/liked-posts", authMiddleware, getLikedPosts);
 router.get("/:id/comments", authMiddleware, getPostComments);
+router.put('/:id/repost', authMiddleware, repost);
+router.post('/test', uploads.array("images"), test);
 
 module.exports = router;

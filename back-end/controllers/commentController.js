@@ -1,4 +1,5 @@
 const { Comment } = require("../models/comments");
+const { Notification } = require("../models/notifications");
 const { Post } = require("../models/posts");
 const { User } = require("../models/users");
 const { commentSchema } = require("../validation/commentValidation");
@@ -26,6 +27,18 @@ async function createComment(req, res) {
             postId,
             userId,
         });
+
+        // create notification for post owner
+        const postOwner = await User.findById(post.userId);
+        if (postOwner._id != userId) {
+            await Notification.create({
+                type: 'commentOnYourPost',
+                sender: userId,
+                user: post.userId,
+                post: postId,
+                comment: comment._id,
+            });
+        }
 
         res.status(201).json({ message: 'comment created', comment });
     } catch (error) {
@@ -90,16 +103,34 @@ async function likeComment(req, res) {
 
         if (!comment) return res.status(404).json({ message: 'comment not found' });
 
+        // check if the user already liked the comment
         const isLiked = comment.likes.includes(userId);
         if (isLiked) {
-            comment.likes.filter((id) => id != userId);
-            await comment.save();
+            // comment.likes = comment.likes.filter((id) => id != userId);
+            await comment.updateOne({
+                $pull: { likes: userId },
+            });
+            // await comment.save();
             res.json({ message: 'unliked comment' });
         }
 
+        // like comment
         comment.likes.push(userId);
-        await comment.save();
-        res.json({ message: 'comment liked', comment, likes: comment.likes.length });
+        await comment.updateOne({
+            $push: { likes: userId },
+        });
+
+        // create notification for comment owner
+        if (comment.userId != userId) { 
+            await Notification.create({
+                type: 'likedComment',
+                sender: userId,
+                user: comment.userId,
+                comment: commentId,
+                post: comment.postId,
+            });
+        }
+        res.json({ message: 'comment liked and notification sent', comment, likes: comment.likes.length });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'internal server error' });

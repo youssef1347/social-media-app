@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 
 const postSchema = new mongoose.Schema({
-    images: [String],
+    mediaUrl: { type: [String], required: true },
+    mediaType: {type: String, enum: ['image', 'video'], required: true},
     caption: { type: String, default: '' },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

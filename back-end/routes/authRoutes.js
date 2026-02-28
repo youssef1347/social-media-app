@@ -7,6 +7,7 @@ const {
     forgotPassword,
     sendOtp,
     resetPassword,
+    generateAccessToken,
 } = require("../controllers/authController");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -17,6 +18,7 @@ router.post("/login", login);
 router.post("/logout", authMiddleware, logout);
 router.post("/forgot-password", forgotPassword);
 router.post("/send-otp", sendOtp);
+router.post('/generate-access-token', generateAccessToken);
 router.put("/reset-password", resetPassword);
 
 module.exports = router;

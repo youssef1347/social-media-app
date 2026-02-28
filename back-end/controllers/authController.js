@@ -6,6 +6,7 @@ const { registerSchema, verifyOtpSchema, loginSchema, resetPasswordSchema } = re
 const { sendEmail } = require("../utils/sendEmail");
 const { generateTokens } = require("../utils/generateToken");
 const { generateOtp } = require("../utils/otpGenerator");
+const jwt = require("jsonwebtoken");
 dotenv.config();
 
 
@@ -168,7 +169,6 @@ async function login(req, res) {
             return res.status(403).json({ message: 'verify your email first', email: user.email });
     }
 
-
         // generate access and refresh tokens
         const { refreshToken, accessToken } = generateTokens(user);
 
@@ -204,7 +204,7 @@ async function logout(req, res) {
         res.status(200).json({ message: 'logged out successfully', id: req.user.id });
     } catch (error) {
         console.log(error); 
-        
+        res.status(500).json({ message: 'internal server error' });
     }
 }
 
@@ -297,4 +297,41 @@ async function resetPassword(req, res) {
 }
 
 
-module.exports = { register, verifyOtp, login, logout, forgotPassword, sendOtp, resetPassword };
+// generate new access token using refresh token function
+async function generateAccessToken(req, res) {
+    try {
+        // get refresh token from cookie
+        const refreshToken = req.cookies.refreshToken;
+
+        if (!refreshToken) return res.status(401).json({ message: 'unauthorized' });
+
+        // verify refresh token
+        const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        // find the user
+        const user = await User.findById(payload.id);
+        if (!user) return res.status(401).json({ message: 'unauthorized' });
+
+        // generate new access token
+        const accessToken = jwt.sign({ id: user._id },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '15m' });
+
+        res.json({ accessToken });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+module.exports = {
+    register,
+    verifyOtp,
+    login,
+    logout,
+    forgotPassword,
+    sendOtp,
+    resetPassword,
+    generateAccessToken,
+};

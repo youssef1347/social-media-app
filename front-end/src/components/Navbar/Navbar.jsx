@@ -9,46 +9,93 @@ import { FiPlus } from "react-icons/fi";
 import { GoVideo } from "react-icons/go";
 import { SlCompass } from "react-icons/sl";
 import { IoMdMenu } from "react-icons/io";
+import "animate.css";
+import { NavLink } from 'react-router-dom';
 
 
 
-export const Navbar = () => {
+export const Navbar = ({profilePic}) => {
     return (
         <>
-            {/* navber container */}
+            {/* navbar container */}
             <div className="navbar-container">
 
-                {/* icons container */}
-                <div className="navbar-icons-container">
-
-                    <FaInstagram className='navbar-instagram-icon' /> { /* instagram icon */}
-                    <GoHomeFill className='navbar-home-icon' /> { /* home icon */}
-                    <GoVideo className='navbar-reels-icon' /> { /* reels icon */}
-                    <LuSend className='sendMsg-icon' /> { /* send message icon */}
-                    <IoSearchOutline className='search-icon' /> { /* search icon */}
-                    <SlCompass className='explore-icon' /> { /* explore icon */}
-                    <CiHeart className='notification-icon' /> { /* notification icon */}
-                    <FiPlus className='create-icon' /> { /* create post icon */}
-                    <FiPlus className='create-icon' /> { /* create post icon */}
-                    {/* profile icon here */}
-                    <IoMdMenu className='menu-icon' /> { /* menu bar icon */}
-
+                <div className="navbar-instagram-logo-container ">
+                    <FaInstagram className='navbar-instagram-logo' />
                 </div>
 
-                <div className="navbar-icon-name-container">
+                {/* home link */}
+                <NavLink to="/">
+                    <div className="home-link-container">
+                        <GoHomeFill className='navbar-home-icon' />
+                        <h5>Home</h5>
+                    </div>
+                </NavLink>
 
-                    <h4>hello</h4>
-                    <h4>Home</h4>
-                    <h4>Reels</h4>
-                    <h4>Messages</h4>
-                    <h4>Search</h4>
-                    <h4>Explore</h4>
-                    <h4>Notifications</h4>
-                    <h4>Create</h4>
-                    <h4>Profile</h4>
-                    <h4>Menu</h4>
+                {/* reels link */}
+                <NavLink to="/reels">
+                    <div className="reels-link-container">
+                        <GoVideo className='navbar-reels-icon' />
+                        <h5>Reels</h5>
+                    </div>
+                </NavLink>
 
-                </div>
+                {/* messages link */}
+                <NavLink to="/messages">
+                    <div className="messages-link-container">
+                        <LuSend className='navbar-messages-icon' />
+                        <h5>Messages</h5>
+                    </div>
+                </NavLink>
+
+                {/* search link */}
+                <NavLink to="/search">
+                    <div className="search-link-container">
+                        <IoSearchOutline className='navbar-search-icon' />
+                        <h5>Search</h5>
+                    </div>
+                </NavLink>
+
+                {/* explore link */}
+                <NavLink to="/explore">
+                    <div className="explore-link-container">
+                        <SlCompass className='navbar-explore-icon' />
+                        <h5>Explore</h5>
+                    </div>
+                </NavLink>
+
+                {/* notifications link */}
+                <NavLink to="/notifications">
+                    <div className="notifications-link-container">
+                        <CiHeart className='navbar-notifications-icon' />
+                        <h5>Notifications</h5>
+                    </div>
+                </NavLink>
+
+                {/* create post link */}
+                <NavLink to='/create-post'>
+                    <div className="create-post-link-container">
+                        <FiPlus className='navbar-create-post-icon' />
+                        <h5>Create</h5>
+                    </div>
+                </NavLink>
+
+                {/* profile link */}
+                <NavLink to='/profile'>
+                    <div className="profile-link-container">
+                        <img src={profilePic} width="20" height="20" alt="profile" className='navbar-profile-pic' />
+                        <h5>Profile</h5>
+                    </div>
+                </NavLink>
+
+                {/* menu link */}
+                <NavLink to='/menu'>
+                    <div className="menu-link-container">
+                        <IoMdMenu className='navbar-menu-icon' />
+                        <h5>Menu</h5>
+                    </div>
+                </NavLink>
+
             </div>
         </>
     )

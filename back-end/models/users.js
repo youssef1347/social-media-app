@@ -15,7 +15,9 @@ const userSchema = mongoose.Schema({
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
-    avatar: { type: String, default: 'https://www.pinterest.com/pin/avatar-picture--252201647877605769/' },
+    repostedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
+    privateAccount: {type: Boolean, default: false},
+    avatar: { type: String, default: 'public, default-profile-pic-jpg' },
     bio: { type: String, default: '' },
 }, { timestamps: true });
 

@@ -1,45 +1,72 @@
-/* icon conatiner styles */
-.navbar-icons-container {
+/* navbar container styles */
+.navbar-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    background-color: rgb(24, 24, 24);
-    width: 6%;
-    height: 100vh;
-    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.719);
+    gap: 5px;
+    padding-left: 20px;
+    width: 70px;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+.navbar-container:hover {
+    width: 200px;
 }
 
-/* icons style */
-.navbar-icons-container * {
+/* navbar links container styles */
+.navbar-container div {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+    width: min-content;
+    padding: 8px;
+    box-sizing: border-box;
     color: white;
-    font-size: 30px;
+    align-items: center;
 }
-.navbar-icons-container *:hover {
+
+/* navbar links styles */
+.navbar-container a {
+    text-decoration: none;
+    width: 30px;
+    color: White;
+}
+
+/* icons styles */
+.navbar-home-icon,
+.navbar-notifications-icon,
+.navbar-profile-pic,
+.navbar-instagram-logo,
+.navbar-search-icon,
+.navbar-explore-icon,
+.navbar-messages-icon,
+.navbar-reels-icon,
+.navbar-create-post-icon,
+.navbar-menu-icon {
+    font-size: 30px;
+    width: 40px;
     cursor: pointer;
 }
 
-.navbar-container {
-    display: flex;
-    color: white;
-    background-color: rgb(24, 24, 24);
+/* h5 styles*/
+.navbar-container h5 {
+    white-space: nowrap;
+    font-size: 17px;
+    transform: translateX(-200px);
+    transition: transform 0.3s ease;
 }
 
-/* icon names styles */
-.navbar-icon-name-container {
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    margin: 0;
-    justify-content: space-between;
-    transform: translateX(-200%);
-    opacity: 0;
-    transition: .5s ease;
-}
-.navbar-icons-container:hover + .navbar-icon-name-container {
+.navbar-container:hover h5 {
     transform: translateX(0);
-    opacity: 1;
 }
-.navbar-icons-container *:hover + .navbar-icon-name-container {
-    transform: translateX(0);
-    opacity: 1;
+.navbar-container div:hover {
+    background-color: rgba(255, 255, 255, 0.212);
+    border-radius: 10px;
+}
+
+/* image styles */
+.navbar-profile-pic {
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
 }
