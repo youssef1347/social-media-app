@@ -42,6 +42,7 @@ export const Home = () => {
     return (
         <>
             <Navbar profilePic={profilePicture}/>
+            <img src={profilePicture} alt="profile" />
         </>
     )
 }

@@ -63,7 +63,6 @@ export const Register = () => {
             }
 
             if (!data.email || !data.username || !data.password) {
-                // setErrorMessage('email is required');
                 dispatch({
                     type: 'SET_ERRORS', payload:
                     {
