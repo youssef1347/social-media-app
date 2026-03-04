@@ -18,9 +18,10 @@ export const Home = () => {
             try {
                 const response = await api.get('/api/user/');
                 console.log(response);
+                
                 setHomeInfo(response.data);
                 // setPosts(response.data.posts);
-                setProfilePicture(response.data.profilePicture);
+                setProfilePicture(response.data.user.avatar);
             } catch (error) {
                 console.log(error);
             }
