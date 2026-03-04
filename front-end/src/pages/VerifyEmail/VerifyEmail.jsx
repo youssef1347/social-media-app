@@ -51,7 +51,7 @@ export const VerifyEmail = () => {
         const value = ev.target.value;
 
         // change the class name according to the value
-        setLabelClassName(value ? 'input-has-value' : '');
+        // setLabelClassName(value ? 'input-has-value' : '');
 
         // allow only numbers
         const index = value.split('');

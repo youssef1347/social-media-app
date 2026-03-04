@@ -10,6 +10,7 @@ export const Home = () => {
 
     // get user profile picture
     const [profilePicture, setProfilePicture] = useState('');
+    const [username, setUsername] = useState('');
 
     const [homeInfo, setHomeInfo] = useState({});
 
@@ -18,10 +19,12 @@ export const Home = () => {
             try {
                 const response = await api.get('/api/user/');
                 console.log(response);
+                console.log(response.data.user.username);
+                console.log(response.data.user.avatar);
                 
-                setHomeInfo(response.data);
+                // setHomeInfo(response.data);
                 // setPosts(response.data.posts);
-                setProfilePicture(response.data.user.avatar);
+                // setProfilePicture(data.user.avatar);
             } catch (error) {
                 console.log(error);
             }
@@ -43,7 +46,8 @@ export const Home = () => {
     return (
         <>
             <Navbar profilePic={profilePicture}/>
-            <img src={profilePicture} alt="profile" />
+            {/* <img src={profilePicture} alt="profile" />
+            <h1>{profilePicture}</h1> */}
         </>
     )
 }

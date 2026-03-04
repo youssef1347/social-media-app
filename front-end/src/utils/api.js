@@ -24,7 +24,7 @@ api.interceptors.response.use((response) => {
     (error) => {
         if (error.response.status === 401) {
             // generate new access token
-            const response = api.post('api/auth/generate-access-token');
+            const response = api.post("api/auth/generate-access-token");
             const { accessToken } = response.data;
 
             // set new token in local storage
