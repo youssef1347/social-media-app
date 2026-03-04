@@ -303,7 +303,7 @@ async function generateAccessToken(req, res) {
         // get refresh token from cookie
         const refreshToken = req.cookies.refreshToken;
 
-        if (!refreshToken) return res.status(401).json({ message: 'unauthorized' });
+        if (!refreshToken) return res.status(401).json({ message: 'refresh token is missing' });
 
         // verify refresh token
         const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -313,9 +313,10 @@ async function generateAccessToken(req, res) {
         if (!user) return res.status(401).json({ message: 'unauthorized' });
 
         // generate new access token
-        const accessToken = jwt.sign({ id: user._id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '15m' });
+        // const accessToken = jwt.sign({ id: user._id },
+        //     process.env.ACCESS_TOKEN_SECRET,
+        //     { expiresIn: '15m' });
+        const { accessToken } = generateTokens(user);
 
         res.json({ accessToken });
     } catch (error) {

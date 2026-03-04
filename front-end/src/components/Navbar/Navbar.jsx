@@ -14,7 +14,9 @@ import { NavLink } from 'react-router-dom';
 
 
 
-export const Navbar = ({profilePic}) => {
+export const Navbar = ({ profilePic }) => {
+    const safeProfilePic = profilePic?.trim() ? profilePic : null;
+
     return (
         <>
             {/* navbar container */}
@@ -83,7 +85,13 @@ export const Navbar = ({profilePic}) => {
                 {/* profile link */}
                 <NavLink to='/profile'>
                     <div className="profile-link-container">
-                        <img src={profilePic} width="20" height="20" alt="profile" className='navbar-profile-pic' />
+                        <img
+                            src={safeProfilePic}
+                            width="20"
+                            height="20"
+                            alt="profile"
+                            className='navbar-profile-pic'
+                        />
                         <h5>Profile</h5>
                     </div>
                 </NavLink>

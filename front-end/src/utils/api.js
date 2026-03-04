@@ -20,20 +20,34 @@ api.interceptors.request.use((config) => {
 
 
 // handle token expiration by axios response interceptors
-api.interceptors.response.use((response) => {
-    (error) => {
-        if (error.response.status === 401) {
-            // generate new access token
-            const response = api.post("api/auth/generate-access-token");
-            const { accessToken } = response.data;
+api.interceptors.response.use(
+    (response) => {
 
-            // set new token in local storage
-            localStorage.setItem('token', accessToken);
+        return response;
+    }, async (error) => {
+        try {
+
+            if (error.response.data.message === 'refresh token is missing') {
+                // logout user
+                localStorage.removeItem('token');
+                await api.post('api/auth/logout');
+                // redirect to login page
+                window.location.href = '/login';
+            } else if (error.response.data.message === 'Invalid or expired token') {
+                // generate new access token
+                const response = await api.post('api/auth/generate-access-token');
+                const { accessToken } = response.data;
+                // store new access token in local storage
+                localStorage.setItem('token', accessToken);
+                // retry original request with new access token
+                error.config.headers.Authorization = `Bearer ${accessToken}`;
+                return api.request(error.config);
+            }
+        } catch (error) {
+            return Promise.reject(error);
         }
+
     }
-    return response;
-}), (error) => {
-    return Promise.reject(error);
-    };
+);
 
 

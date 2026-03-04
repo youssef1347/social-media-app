@@ -9,13 +9,12 @@ const {
     resetPassword,
     generateAccessToken,
 } = require("../controllers/authController");
-const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/verify-otp", verifyOtp);
 router.post("/login", login);
-router.post("/logout", authMiddleware, logout);
+router.post("/logout", logout);
 router.post("/forgot-password", forgotPassword);
 router.post("/send-otp", sendOtp);
 router.post('/generate-access-token', generateAccessToken);
