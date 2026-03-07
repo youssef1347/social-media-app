@@ -17,8 +17,9 @@ const userSchema = mongoose.Schema({
     likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
     repostedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
     privateAccount: {type: Boolean, default: false},
-    avatar: {type: String, default: '/default-profile-pic.jpg'},
+    avatar: { type: String },
     bio: { type: String, default: '' },
+    blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);

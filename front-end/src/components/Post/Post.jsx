@@ -1,7 +1,7 @@
 import React from "react";
 import "./Post.css";
 import { SlOptions } from "react-icons/sl";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeartFull } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
 import { CiBookmark } from "react-icons/ci";
@@ -12,13 +12,14 @@ export const Post = ({
     username,
     createdAt,
     isFollowing,
-    postContent,
+    mediaUrls = [],
     likesCount,
     commentsCount,
     postCaption,
     toggleFollow,
     toggleLike,
     getComments,
+    isLiked,
     }) => {
     return (
         <div className="post-container">
@@ -45,12 +46,15 @@ export const Post = ({
                 </div>
             </div>
 
-            {/* post content */}
+            {/* post content - loop through media urls */}
             <div className="post-content">
-                <img
-                    src={postContent}
-                    className="post-img"
-                    alt="post" />
+                {mediaUrls.map((url, idx) => (
+                    <img
+                        key={idx}
+                        src={url}
+                        className="post-img"
+                        alt="post" />
+                ))}
             </div>
 
             {/* post footer */}
@@ -58,7 +62,11 @@ export const Post = ({
                 <div className="post-actions-container">
 
                     {/* likes */}
-                    <FaRegHeart className="post-like-icon" onClick={toggleLike}/> {/* like icon */}
+                    {isLiked ? (
+                        <FaHeartFull className="post-like-icon liked" onClick={toggleLike}/>
+                    ) : (
+                        <FaRegHeart className="post-like-icon" onClick={toggleLike}/>
+                    )}
                     <h5 className="likes-count">
                         {likesCount <= 0 ? "" : likesCount } {/* likes count */}
                     </h5>

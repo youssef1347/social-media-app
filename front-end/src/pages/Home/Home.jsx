@@ -1,8 +1,10 @@
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import './Home.css'
 import { Navbar } from '../../components/Navbar/Navbar'
 import { api } from '../../utils/api';
 import { useEffect } from 'react';
+import { Post } from '../../components/Post/Post';
+import { Reels } from '../../components/Reels/Reels';
 
 export const Home = () => {
     // posts state
@@ -12,19 +14,34 @@ export const Home = () => {
     const [profilePicture, setProfilePicture] = useState('');
     const [username, setUsername] = useState('');
 
-    const [homeInfo, setHomeInfo] = useState({});
+    // toggle like function
+    async function toggleLike(postId) {
+        try {
+            const response = await api.post(`/api/post/like-post/${postId}`);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+    // toggle follow function
+    async function toggleFollow(id) {
+        try {
+            const response = await api.put(`api/user/follow/${id}`);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // fetch posts
     useEffect(() => {
         async function fetchHomeInfo() {
             try {
                 const response = await api.get('/api/user/');
+                setProfilePicture(response.data.user.avatar || 'default-porfile-pic.jpg');
                 console.log(response);
-                console.log(response.data.user.username);
-                console.log(response.data.user.avatar);
-                
-                // setHomeInfo(response.data);
-                // setPosts(response.data.posts);
-                // setProfilePicture(data.user.avatar);
+                setPosts(response.data.posts);
             } catch (error) {
                 console.log(error);
             }
@@ -32,22 +49,42 @@ export const Home = () => {
         fetchHomeInfo();
     }, []);
 
-    // fetch posts
-    async function fetchPosts() {
-        try {
-            // get posts
-            const posts = await api.get('/api/user/');
-            console.log(posts);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     return (
         <>
-            <Navbar profilePic={profilePicture}/>
-            {/* <img src={profilePicture} alt="profile" />
-            <h1>{profilePicture}</h1> */}
+            <Navbar profilePic={profilePicture} />
+            {posts.map((post) => {
+                if (post.mediaType === 'image') {
+                    return <Post
+                        key={post._id}
+                        profilePic={post.userId.avatar}
+                        username={post.userId.username}
+                        createdAt={post.createdAt}
+                        mediaUrls={post.mediaUrl}
+                        likesCount={post.likesCount || post.likes.length}
+                        commentsCount={post.commentsCount}
+                        postCaption={post.caption}
+                        toggleLike={() => toggleLike(post._id)}
+                        toggleFollow={() => toggleFollow(post.userId._id)}
+                        isLiked={post.isLiked}
+                        isFollowing={post.isFollowing}
+                    />
+                } else {
+                    return <Reels
+                        key={post._id}
+                        profilePic={post.userId.avatar}
+                        username={post.userId.username}
+                        reelContent={post.mediaUrl[0]}
+                        likesCount={post.likesCount || post.likes.length}
+                        commentsCount={post.commentsCount}
+                        reelCaption={post.caption}
+                        toggleLike={() => toggleLike(post._id)}
+                        toggleFollow={() => toggleFollow(post.userId._id)}
+                        isLiked={post.isLiked}
+                        isFollowing={post.isFollowing}
+                    />
+                }
+                
+            })}
         </>
     )
 }

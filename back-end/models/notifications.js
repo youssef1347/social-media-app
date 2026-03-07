@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema({
             'respostedYourPost',
             'startedFollowingYou',
             'requestedToFollowYou',
-            'repostedPostYouLikedOrReposted'
+            'repostedPostYouLikedOrReposted',
         ]
     },
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // the user who triggered the notification

@@ -8,14 +8,29 @@ const { commentSchema } = require("../validation/commentValidation");
 // get user profile
 async function getUserProfile(req, res) {
     try {
-        const { id } = req.params;
 
-        // get user
-        const profileInfo = await User.findById(id).select('username bio avatar');
+        const { id } = req.params;
+        const user = await User.findById(id).select('username bio avatar privateAccount ');
+        if (!user) return res.status(404).json({message: 'user not found'});
+
+        // chceck if the user profile is private and the user that request to get the profile is not following the user
+        if (user.privateAccount && !user.followers.includes(req.user.id) && req.user.id != id) {
+            return res.status(403).json({ message: 'this account is private' });
+        }
+
+        // check if the user that sent request is blocked by the user he checked his profile
+        const requester = await User.findById(req.user.id).select('blockedUsers following');
+        if (user.blockedUser.includes(req.user.id)) {
+            res.status(403).json({ message: 'this user has blocked you' });
+        }
 
         // get user following and followers length
-        const followersLength = profileInfo.followers.length;
-        const followingLength = profileInfo.following.length;
+        const followersLength = user.followers.length;
+        const followingLength = user.following.length;
+
+
+        // check if the requester is following the target user
+        const isFollowing = requester.following.includes(id);
 
         // get user posts length
         const postsLength = await Post.countDocuments({ userId: id });
@@ -23,15 +38,14 @@ async function getUserProfile(req, res) {
         // get posts of the user
         const posts = await Post.find({userId: id}).populate('mediaUrl');
 
-        if (!profileInfo) return res.status(404).json({ message: 'user not found' });
-
         res.json({
             message: 'profile returned',
-            profile: profileInfo,
+            profile: user,
             followersLength,
             followingLength,
             postsLength,
             posts,
+            isFollowing,
         });
     } catch (error) {
         console.log(error);
@@ -120,40 +134,24 @@ async function follow(req, res) {
 
         // update the followers list of the user that get followed
         await targetUser.updateOne({
-            $addToSet: { followers: currentUserId }
+            $push: { followers: currentUserId }
+        });
+
+        // create notification for the target user
+        await Notification.create({
+            type: 'startedFollowingYou',
+            user: targetUserId,
+            sender: currentUserId,
         });
 
         // update the following list of the users thats follows another user
         await currentUser.updateOne({
-            $addToSet: { following: targetUserId }
+            $push: { following: targetUserId }
         });
 
             res.json({ message: "followed successfully" });
     } catch (error) {
         console.log(error);
-    }
-}
-
-
-// get user following posts
-async function getFollowingPosts(req, res) {
-    try {
-        // get user
-        const userId = req.user.id;
-        const user = await User.findById(userId);
-
-        // check if there is no user
-        if (!user) return res.status(401).json({ message: 'Unauthorized' });
-
-        // get posts of the users that the user follows
-        const posts = await Post.find({ userId: { $in: user.following } })
-            .sort({ createdAt: -1 })
-            .populate('userId', 'username avatar');
-
-        res.json({ message: 'posts returned', posts });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'internal server error' });
     }
 }
 
@@ -165,7 +163,18 @@ async function getHomeInfo(req, res) {
         const user = await User.findById(userId).select('username avatar');
         if (!user) return res.status(401).json({ message: 'Unauthorized' });
 
-        res.json({ message: 'home info returned', user });
+        // get posts of the users that the user follows
+        const posts = await Post.find({ userId: { $in: user.following } })
+            .sort({ createdAt: -1 })
+            .populate('userId', 'username avatar');
+
+        // add isLiked for each post
+        const postsWithMeta = posts.map(post => ({
+            ...post.toObject(),
+            isLiked: post.likes.includes(userId),
+        }));
+
+        res.json({ message: 'home info returned', user, posts: postsWithMeta });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'internal server error' });
@@ -173,4 +182,70 @@ async function getHomeInfo(req, res) {
 }
 
 
-module.exports = { getUserProfile, getFollowers, getFollowing, follow, getFollowingPosts, getHomeInfo };
+// get user notifications
+async function getUserNotifications(req, res) {
+    try {
+        // get the user
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        if (!user) return res.status(401).json({ message: 'Unauthorized' });
+
+        // get the notifications
+        const notifications = await Notification.find({ user: userId });
+
+        res.json({ message: 'notifications returned', notifications });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+// block user function
+async function blockUsers(req, res) {
+    try {
+        // get the user that will be blocked
+        const targetUserId = req.params.id;
+        const targetUser = await User.findById(targetUserId);
+        if (!targetUser) return res.status(404).json({message: 'user not found'});
+
+        // get the user that will block the target user
+        const currentUserId = req.user.id;
+        const currentUser = await User.findById(currentUserId);
+        if (!currentUser) return res.status(401).json({message: 'unauthorized'});
+
+        // check if the target user already blocked
+        const isBlocked = currentUser.blockedUsers.includes(targetUserId);
+        if (isBlocked) {
+            await currentUser.updateOne({
+                $pull: { blockedUsers: targetUserId }
+            });
+            return res.json({ message: 'user has been unblocked', unblockedUser: targetUserId });
+        }
+
+        // block the target user
+        await currentUser.updateOne({
+            $push: { blockedUsers: targetUserId },
+        });
+
+        // remove follow relationships
+        await currentUser.updateOne({ $pull: { following: targetUserId } });
+        await targetUser.updateOne({ $pull: { followers: currentUserId } });
+
+        res.json({ message: 'user has been blocked', blockedUser: targetUserId });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'internal server error'});
+    }
+}
+
+
+module.exports = {
+    getUserProfile,
+    getFollowers,
+    getFollowing,
+    follow,
+    getUserNotifications,
+    getHomeInfo,
+    blockUsers,
+};

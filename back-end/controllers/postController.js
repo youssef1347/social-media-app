@@ -92,7 +92,14 @@ async function getPostById(req, res) {
         // check if there is no post
         if (!post) return res.status(404).json({ message: 'post not found' });
 
-        res.json({ message: 'posts returned', post });
+        // add isLiked (likesCount is now a virtual)
+        const userId = req.user.id;
+        const postWithMeta = {
+            ...post.toObject(),
+            isLiked: post.likes.includes(userId),
+        };
+
+        res.json({ message: 'post returned', post: postWithMeta });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'internal server error' });

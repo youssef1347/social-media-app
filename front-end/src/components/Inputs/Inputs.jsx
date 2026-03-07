@@ -2,7 +2,7 @@ import './Inputs.css'
 import React, { useState } from 'react'
 import { MdErrorOutline } from "react-icons/md";
 
-export const Inputs = ({ type, inputRef, id, name, labelValue, errorMessage, onChangeFunction }) => {
+export const Inputs = ({ type, inputRef, id, name, labelValue, errorMessage, onChangeFunction, multiple }) => {
     const [labelClassName, setLabelClassName] = useState('');
 
 
@@ -26,7 +26,9 @@ export const Inputs = ({ type, inputRef, id, name, labelValue, errorMessage, onC
                 id={id}
                 name={name}
                 onChange={handleChange}
-                type={type} />
+                type={type}
+                multiple={multiple}
+            />
             <label
                 style={errorMessage ?
                     { color: 'rgb(248, 76, 70)' } :

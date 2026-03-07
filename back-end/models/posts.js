@@ -9,6 +9,14 @@ const postSchema = new mongoose.Schema({
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
+// Virtual for likes count
+postSchema.virtual('likesCount').get(function() {
+    return this.likes.length;
+});
+
+// Ensure virtuals are included in JSON output
+postSchema.set('toJSON', { virtuals: true });
+postSchema.set('toObject', { virtuals: true });
 
 const Post = mongoose.model("Post", postSchema);
 
