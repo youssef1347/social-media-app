@@ -101,7 +101,6 @@ export const Register = () => {
             console.log(otpRes);
 
         } catch (error) {
-            // setLoading(true);
 
             // error handling
             if (error.response?.data?.messages) {
@@ -110,9 +109,8 @@ export const Register = () => {
                     toast.error(msg);
                 });
             } else if (error.response?.data?.message) {
-                toast.error(error.response.data.message);
-                dispatch({type: 'SET_ERRORS', payload: {email: error.response.data.message.split(' ').includes('email') ? error.response.data.message : '' }})
-                console.log(error.response.data.message);
+                toast.error(error.response?.data?.message);
+                console.log(error.response?.data?.message);
             } else {
                 toast.error('An unexpected error occurred.');
             }

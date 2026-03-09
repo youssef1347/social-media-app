@@ -12,7 +12,6 @@ export const Home = () => {
 
     // get user profile picture
     const [profilePicture, setProfilePicture] = useState('');
-    const [username, setUsername] = useState('');
 
     // toggle like function
     async function toggleLike(postId) {
@@ -39,7 +38,7 @@ export const Home = () => {
         async function fetchHomeInfo() {
             try {
                 const response = await api.get('/api/user/');
-                setProfilePicture(response.data.user.avatar || 'default-porfile-pic.jpg');
+                setProfilePicture(response.data.user.avatar);
                 console.log(response);
                 setPosts(response.data.posts);
             } catch (error) {
@@ -51,7 +50,7 @@ export const Home = () => {
 
     return (
         <>
-            <Navbar profilePic={profilePicture} />
+            <Navbar profilePic={profilePicture || 'default-profile-pic.jpg'} />
             {posts.map((post) => {
                 if (post.mediaType === 'image') {
                     return <Post

@@ -19,7 +19,7 @@ export const Profile = () => {
 
     useEffect(() => {
         getProfile();
-    }, [id]);
+    }, []);
 
     return (
         <div>

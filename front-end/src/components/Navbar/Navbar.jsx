@@ -13,7 +13,7 @@ import "animate.css";
 import { NavLink } from "react-router-dom";
 
 export const Navbar = ({ profilePic }) => {
-  const safeProfilePic = profilePic || "/default-profile-pic.jpg";
+  const safeProfilePic = profilePic || "default-profile-pic.jpg";
 
   return (
     <>

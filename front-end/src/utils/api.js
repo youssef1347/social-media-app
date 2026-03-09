@@ -13,9 +13,9 @@ api.interceptors.request.use((config) => {
     }
 
     return config;
-}), (error) => {
+}, (error) => {
     return Promise.reject(error);
-    };
+});
 
 
 
@@ -42,6 +42,9 @@ api.interceptors.response.use(
                 // retry original request with new access token
                 error.config.headers.Authorization = `Bearer ${accessToken}`;
                 return api.request(error.config);
+            } else {
+                // Return other errors
+                return Promise.reject(error);
             }
         } catch (error) {
             return Promise.reject(error);

@@ -7,6 +7,10 @@ const { Notification } = require("../models/notifications");
 // create post
 async function createPost(req, res) {
     try {
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: 'no files uploaded' });
+        }
+
         const mediaUrl = req.files.map((file) => file.path);
         const mediaType = req.files[0].mimetype.startsWith('image') ? 'image' : 'video';
         console.log(req.files);

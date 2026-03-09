@@ -16,9 +16,7 @@ async function register(req, res) {
 
 
         if (error) {
-            const errMessage = error.details.map((err) => err.message);
-            const errPath = error.details.map((err) => err.path);
-            return res.status(400).json({ message: errMessage, path: errPath });
+            return res.status(400).json({ message: error.details.map((err) => err.message) });
         };
 
         //check if this email already exists

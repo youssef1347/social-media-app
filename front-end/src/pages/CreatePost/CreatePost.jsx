@@ -6,6 +6,7 @@ import { api } from '../../utils/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from "react-bootstrap/Spinner";
+import toast from 'react-hot-toast';
 
 export const CreatePost = () => {
     // post ref
@@ -27,6 +28,7 @@ export const CreatePost = () => {
 
         const files = postRef.current.files;
 
+        // handling error if the user did not sent the data
         if (files.length === 0) {
             setErrorMessage('you must choose at least one file');
             return;
@@ -37,22 +39,20 @@ export const CreatePost = () => {
             const formData = new FormData();
 
             Array.from(files).forEach(file => {
-                formData.append('mediaUrl', file);
+                formData.append('images', file);
             });
 
             formData.append("caption", captionRef.current?.value || "");
 
-            // handling error if the user did not sent the data
-            const response = await api.post('/api/post/create-post', formData, {
-                headers: {'Content-Type': 'multipart/form-data'},
-            });
+            const response = await api.post('/api/post/create-post', formData);
             console.log(response);
 
             // navigate to home page
             navigate('/');
         } catch (error) {
             console.log(error);
-            setErrorMessage(error.response?.data?.message ? error.response?.data?.message : 'unexpected error');
+            toast.error(error.response?.data?.message);
+            setErrorMessage(error.response?.data?.message || 'unexpected error');
         } finally {
             setLoading(false);
         }

@@ -1,7 +1,8 @@
 import React from "react";
 import "./Post.css";
 import { SlOptions } from "react-icons/sl";
-import { FaRegHeart, FaHeartFull } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
 import { CiBookmark } from "react-icons/ci";
@@ -63,7 +64,7 @@ export const Post = ({
 
                     {/* likes */}
                     {isLiked ? (
-                        <FaHeartFull className="post-like-icon liked" onClick={toggleLike}/>
+                        <FaHeart className="post-like-icon liked" onClick={toggleLike}/>
                     ) : (
                         <FaRegHeart className="post-like-icon" onClick={toggleLike}/>
                     )}
