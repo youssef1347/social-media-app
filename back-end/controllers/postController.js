@@ -7,15 +7,21 @@ const { Notification } = require("../models/notifications");
 // create post
 async function createPost(req, res) {
     try {
+        console.log('Creating post...');
+        console.log('req.files:', req.files);
+        console.log('req.user:', req.user);
+        console.log('req.body:', req.body);
+
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: 'no files uploaded' });
         }
 
         const mediaUrl = req.files.map((file) => file.path);
         const mediaType = req.files[0].mimetype.startsWith('image') ? 'image' : 'video';
-        console.log(req.files);
         const { caption } = req.body;
         const userId = req.user.id;
+
+        console.log('Post data:', { mediaUrl, mediaType, caption, userId });
 
         const post = await Post.create({
             mediaUrl,
