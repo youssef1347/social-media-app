@@ -16,7 +16,7 @@ async function createPost(req, res) {
             return res.status(400).json({ message: 'no files uploaded' });
         }
 
-        const mediaUrl = req.files.map((file) => file.path);
+        const mediaUrl = req.files.map((file) => file.filename);
         const mediaType = req.files[0].mimetype.startsWith('image') ? 'image' : 'video';
         const { caption } = req.body;
         const userId = req.user.id;
