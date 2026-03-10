@@ -2,6 +2,19 @@ import axios from 'axios';
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
+    transformRequest: [function (data, headers) {
+        // if the payload is FormData, remove any manually-specified
+        // content-type header so the browser can set the correct
+        // multipart/form-data boundary automatically
+        if (data instanceof FormData) {
+            if (headers && headers['Content-Type']) {
+                headers['Content-Type'] = 'multipart/form-data';
+            }
+            // axios defaults Accept to application/json; leave it as-is
+        }
+
+        return data;
+    }],
 });
 
 // send token with every request by axios interceptors
@@ -12,11 +25,6 @@ api.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // If data is FormData, let axios handle Content-Type automatically
-    // This is crucial for multipart/form-data with proper boundary
-    if (config.data instanceof FormData) {
-        delete config.headers['Content-Type'];
-    }
 
     return config;
 }, (error) => {
