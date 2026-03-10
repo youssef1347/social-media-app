@@ -44,9 +44,7 @@ export const CreatePost = () => {
 
             formData.append("caption", captionRef.current?.value || "");
 
-            const response = await api.post('/api/post/create-post', formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            const response = await api.post('/api/post/create-post', formData);
             console.log(response);
 
             // navigate to home page
