@@ -6,11 +6,11 @@ const { Notification } = require("../models/notifications");
 
 // create post
 async function createPost(req, res) {
+    console.log('Creating post...');
+    console.log('req.files:', req.files);
+    console.log('req.user:', req.user);
+    console.log('req.body:', req.body);
     try {
-        console.log('Creating post...');
-        console.log('req.files:', req.files);
-        console.log('req.user:', req.user);
-        console.log('req.body:', req.body);
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: 'no files uploaded' });

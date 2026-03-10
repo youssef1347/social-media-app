@@ -12,6 +12,12 @@ api.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // If data is FormData, let axios handle Content-Type automatically
+    // This is crucial for multipart/form-data with proper boundary
+    if (config.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+    }
+
     return config;
 }, (error) => {
     return Promise.reject(error);
