@@ -2,19 +2,19 @@ import axios from 'axios';
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
-    transformRequest: [function (data, headers) {
-        // if the payload is FormData, remove any manually-specified
-        // content-type header so the browser can set the correct
-        // multipart/form-data boundary automatically
-        if (data instanceof FormData) {
-            if (headers && headers['Content-Type']) {
-                headers['Content-Type'] = 'multipart/form-data';
-            }
-            // axios defaults Accept to application/json; leave it as-is
-        }
+    // transformRequest: [function (data, headers) {
+    //     // if the payload is FormData, remove any manually-specified
+    //     // content-type header so the browser can set the correct
+    //     // multipart/form-data boundary automatically
+    //     if (data instanceof FormData) {
+    //         if (headers && headers['Content-Type']) {
+    //             headers['Content-Type'] = 'multipart/form-data';
+    //         }
+    //         // axios defaults Accept to application/json; leave it as-is
+    //     }
 
-        return data;
-    }],
+    //     return data;
+    // }],
 });
 
 // send token with every request by axios interceptors
