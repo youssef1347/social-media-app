@@ -33,6 +33,9 @@ async function createPost(req, res) {
         res.status(201).json({ message: 'post created', post });
     } catch (error) {
         console.log(error);
+        console.log(req.files);
+        console.log(req.body);
+        console.log(req.user);
         res.status(500).json({ message: 'internal server error' });
     }
 }
