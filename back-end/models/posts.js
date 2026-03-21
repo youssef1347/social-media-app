@@ -6,17 +6,19 @@ const postSchema = new mongoose.Schema({
     mediaType: {type: String, enum: ['image', 'video'], required: true},
     caption: { type: String, default: '' },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    likes: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        default: [],
+    },
 }, { timestamps: true });
 
 // Virtual for likes count
 postSchema.virtual('likesCount').get(function() {
-    return this.likes.length;
+    return this.likes.length || 0;
 });
 
 // Ensure virtuals are included in JSON output
-postSchema.set('toJSON', { virtuals: true });
-postSchema.set('toObject', { virtuals: true });
+
 
 const Post = mongoose.model("Post", postSchema);
 

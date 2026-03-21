@@ -1,24 +1,77 @@
-import React from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 import { FaInstagram } from "react-icons/fa";
-import { GoHomeFill } from "react-icons/go";
+import Form from "react-bootstrap/Form";
 import { LuSend } from "react-icons/lu";
+import { MdOutlinePhotoLibrary } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiHeart } from "react-icons/ci";
 import { FiPlus } from "react-icons/fi";
-import { GoVideo } from "react-icons/go";
+import { GoVideo, GoHomeFill } from "react-icons/go";
 import { SlCompass } from "react-icons/sl";
 import { IoMdMenu } from "react-icons/io";
-import "animate.css";
-import { NavLink } from "react-router-dom";
+import { BsGearWide } from "react-icons/bs";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { ThemeContext } from "../../context/ThemeContext";
+import { logout } from "../../utils/APIs/userApiCalls";
+import { clearUser, setUser } from "../../store/slices/userSlice";
+import { api } from "../../utils/APIs/api";
+import { createPost } from "../../utils/APIs/postApiCalls";
 
-export const Navbar = ({ profilePic }) => {
-  const safeProfilePic = profilePic || "default-profile-pic.jpg";
+export const Navbar = () => {
+  const { darkTheme, setDarkTheme } = useContext(ThemeContext);
+
+  const dispatch = useDispatch();
+
+  // post ref
+  const postRef = useRef();
+
+  // caption ref
+  const captionRef = useRef();
+
+  // show post content state
+  const [previewPostContent, setPreviewPostContent] = useState(false);
+
+  // create post function
+  async function handleCreatePost(ev) {
+    ev.preventDefault();
+    await createPost(captionRef.current?.value, postRef.current.files);
+    setPreviewPostContent(true);
+  }
+
+  async function getUserMainInfo() {
+    try {
+      const response = await api.get("/api/user/me");
+      dispatch(setUser(response.data.user));
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getUserMainInfo();
+  }, []);
+
+  const { user } = useSelector((state) => state.user);
+  console.log(user);
+
+  // create post modal
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+
+  const [openMenu, setOpenMenu] = useState(false);
+
+  const navigate = useNavigate();
+
+  const [openNotifications, setOpenNotification] = useState(false);
 
   return (
-    <>
+    <div className="navbar-main-container">
       {/* navbar container */}
-      <div className="navbar-container">
+      <div
+        className={`navbar-container ${openMenu ? "navbar-container-static" : "navbar-container-active"}`}
+      >
         <div className="navbar-instagram-logo-container ">
           <FaInstagram className="navbar-instagram-logo" />
         </div>
@@ -64,26 +117,54 @@ export const Navbar = ({ profilePic }) => {
         </NavLink>
 
         {/* notifications link */}
-        <NavLink to="/notifications">
-          <div className="notifications-link-container">
-            <CiHeart className="navbar-notifications-icon" />
-            <h5>Notifications</h5>
-          </div>
-        </NavLink>
+        <div
+          className="notifications-link-container"
+          onClick={() => setOpenNotification((prev) => !prev)}
+        >
+          <CiHeart className="navbar-notifications-icon" />
+          <h5>Notifications</h5>
+        </div>
 
         {/* create post link */}
-        <NavLink to="/create-post">
-          <div className="create-post-link-container">
-            <FiPlus className="navbar-create-post-icon" />
-            <h5>Create</h5>
+        <div
+          className="create-post-link-container"
+          onClick={() => setShowCreatePostModal(true)}
+        >
+          <FiPlus className="navbar-create-post-icon" />
+          <h5>Create</h5>
+        </div>
+
+        {showCreatePostModal && (
+          <div className="create-post-modal-container">
+            <h4>Create new post</h4>
+
+            <div className="modal-divider"></div>
+
+            <MdOutlinePhotoLibrary />
+            <h5>Drag photos and videos here</h5>
+
+            {/* input container */}
+            <div className="create-post-input-container">
+              <form>
+                <label htmlFor="post">Select from computer</label>
+                <input type="file" name="post" id="post" hidden multiple ref={postRef} />
+              </form>
+            </div>
+
+            {/* preview post */}
+            {previewPostContent && (
+              <div className="preview-post-container">
+                <img src={postRef.current.files[0]} alt="post preview" />
+              </div>
+            )}
           </div>
-        </NavLink>
+        )}
 
         {/* profile link */}
-        <NavLink to="/profile">
+        <NavLink to={`/${user?._id}`}>
           <div className="profile-link-container">
             <img
-              src={safeProfilePic}
+              src={`http://localhost:5000/${user?.avatar}`}
               width="20"
               height="20"
               alt="profile"
@@ -93,14 +174,57 @@ export const Navbar = ({ profilePic }) => {
           </div>
         </NavLink>
 
-        {/* menu link */}
-        <NavLink to="/menu">
-          <div className="menu-link-container">
-            <IoMdMenu className="navbar-menu-icon" />
-            <h5>Menu</h5>
-          </div>
-        </NavLink>
+        {/* // menu link */}
+        <div
+          className="menu-link-container"
+          onClick={() => setOpenMenu(!openMenu)}
+        >
+          <IoMdMenu className="navbar-menu-icon" />
+          <h5>More</h5>
+
+          {openMenu && (
+            <div className="menu-modal-container">
+              <h6
+                onClick={() => {
+                  setOpenMenu(false);
+                  navigate("/settings/edit-profile");
+                }}
+              >
+                <BsGearWide className="navbar-lock-icon" /> Settings
+              </h6>
+
+              <div className="modal-divider"></div>
+
+              <h6 onClick={() => setDarkTheme(!darkTheme)}>
+                Dark mode
+                <Form.Check
+                  type="switch"
+                  id="darkMode"
+                  defaultChecked={darkTheme}
+                  name="darkMode"
+                  onChange={() => {
+                    setDarkTheme(!darkTheme)
+                    localStorage.setItem('darkTheme', darkTheme);
+                  }}
+                  style={{ marginLeft: "30px" }}
+                />
+              </h6>
+
+              <div className="modal-divider"></div>
+
+              <h6
+                onClick={async () => {
+                  await logout();
+                  dispatch(clearUser());
+                  navigate("/login");
+                }}
+              >
+                Logout
+              </h6>
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 };

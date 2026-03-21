@@ -16,7 +16,7 @@ async function createPost(req, res) {
             return res.status(400).json({ message: 'no files uploaded' });
         }
 
-        const mediaUrl = req.files.map((file) => file.filename);
+        const mediaUrl = req.files.map((file) => file.path);
         const mediaType = req.files[0].mimetype.startsWith('image') ? 'image' : 'video';
         const { caption } = req.body;
         const userId = req.user.id;
@@ -40,11 +40,6 @@ async function createPost(req, res) {
     }
 }
 
-function test(req, res) {
-    console.log(req.files);
-    res.json({ message: 'test route' });
-}
-
 
 // edit post
 async function editPost(req, res) {
@@ -61,8 +56,7 @@ async function editPost(req, res) {
         if (userId != post.userId) return res.status(403).json({ message: 'you cannot edit this post' });
 
         // update the caption
-        post.caption = caption;
-        await post.save();
+        await post.updateOne({ $set: { caption } });
 
         res.json({ message: 'post updated', post });
 
@@ -99,17 +93,15 @@ async function deletePost(req, res) {
 async function getPostById(req, res) {
     try {
         // get post by id
-        const postId = req.params.id;
-        const post = await Post.findById(postId);
+        const post = await Post.findById(req.params.id);
 
         // check if there is no post
         if (!post) return res.status(404).json({ message: 'post not found' });
 
         // add isLiked (likesCount is now a virtual)
-        const userId = req.user.id;
         const postWithMeta = {
             ...post.toObject(),
-            isLiked: post.likes.includes(userId),
+            isLiked: post.likes.includes(req.user.id),
         };
 
         res.json({ message: 'post returned', post: postWithMeta });
@@ -138,12 +130,19 @@ async function likePost(req, res) {
         // check if the user already like the post and unlike post
         if (post.likes.includes(userId)) {
             // unlike post
-            post.likes = post.likes.filter((id) => id != userId);
-            user.likedPosts = user.likedPosts.filter((id) => id != postId);
-        } else {
+            await post.updateOne({ $pull: { likes: userId } });
+            await user.updateOne({ $pull: { likedPosts: postId } });
+
+            res.json({
+                message: 'unliked post',
+                post,
+                likes: post.likes.length,
+                likedPosts: user.likedPosts
+            });
+        } 
             // like post
-            post.likes.push(userId);
-            user.likedPosts.push(postId);
+            await post.updateOne({ $push: { likes: userId } });
+            await user.updateOne({ $push: { likedPosts: postId } });
 
             // create notfication for post owner
             await Notification.create({
@@ -152,12 +151,14 @@ async function likePost(req, res) {
                 user: post.userId,
                 post: postId,
             });
-        }
+        
 
-        await post.save();
-        await user.save();
-
-        res.json({ post, likes: post.likes.length, likedPosts: user.likedPosts });
+        res.json({
+            message: 'liked post',
+            post,
+            likes: post.likes.length,
+            likedPosts: user.likedPosts,
+        });
 
     } catch (error) {
         console.log(error);
@@ -169,8 +170,7 @@ async function likePost(req, res) {
 // get user liked posts
 async function getLikedPosts(req, res) {
     try {
-        const userId = req.user.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(req.user.id);
         if (!user) return res.status(401).json({ message: "Unauthorized" });
 
         const likedPosts = user.likedPosts;
@@ -248,6 +248,86 @@ async function repost(req, res) {
 }
 
 
+// save post function
+async function savePost(req, res) {
+    try {
+        const postId = req.params.id;
+
+        // get user
+        const user = await User.findById(req.user.id);
+
+        // get post
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: 'post not found' });
+
+        // check if the user already saved the post and remove save
+        if (user.savedPosts.includes(postId)) {
+            await user.updateOne({
+                $pull: { savedPosts: postId }
+            });
+            res.json({ message: 'unsaved post' });
+        }
+
+        // save post
+        await user.updateOne({
+            $push: { savedPosts: postId }
+        });
+
+        res.json({ message: 'saved post' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+// get user posts
+async function getAllUserPosts(req, res) {
+    try {
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        if (!user) return res.status(401).json({ message: 'unauthorized' });
+
+        const userPosts = await Post.find({ userId });
+
+        res.json({ message: 'posts returned', posts: userPosts });
+    } catch (error) {
+        console.log(eror);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
+// get user reposted posts
+async function getRepostedPosts(req, res) {
+    try {
+        const user = await User.findById(req.user.id);
+
+        const respostedPosts = user.repostedPosts;
+
+        res.json({ message: 'posts returned', posts: repostedPosts });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal sevrer error' });
+    }
+}
+
+
+// get user saved posts
+async function getSavedPosts(req, res) {
+    try {
+        const user = await User.findById(req.user.id);
+
+        const savedPosts = user.savedPosts;
+
+        res.json({ message: 'posts returned', posts: savedPosts });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'internal server error' });
+    }
+}
+
+
 module.exports = {
     likePost,
     createPost,
@@ -257,5 +337,8 @@ module.exports = {
     getLikedPosts,
     getPostComments,
     repost,
-    test,
+    getAllUserPosts,
+    getRepostedPosts,
+    getSavedPosts,
+    savePost,
 };

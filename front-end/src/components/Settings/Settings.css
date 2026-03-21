@@ -1,0 +1,117 @@
+@import "../../index.css";
+
+:root {
+  --primary-color: rgba(128, 128, 128, 0.87);
+}
+
+.settings-main-container {
+  display: flex;
+  background-color: var(--main-bg-color);
+  overflow-y: auto;
+  height: 100vh;
+}
+.settings-container {
+  margin: 30px;
+  flex-wrap: wrap;
+}
+.settings-container h4 {
+  color: var(--main-text-color);
+  margin: 20px;
+}
+
+/* scroll bar styles */
+.settings-main-container::-webkit-scrollbar {
+  width: 8px;
+}
+.settings-main-container::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+.settings-main-container::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+.settings-main-container::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* account center styles */
+.account-center-container {
+  cursor: pointer;
+  background-color: rgba(77, 76, 76, 0.322);
+  margin: 30px 0;
+  border-radius: 10px;
+  padding: 15px;
+  p {
+    font-size: 14px;
+    color: var(--primary-color);
+  }
+}
+.account-center-container h5 {
+  color: var(--main-text-color);
+  .meta-icon {
+    color: var(--button-color-1);
+  }
+}
+.details-container {
+  color: var(--primary-color);
+  h6 {
+    font-size: 14px;
+  }
+}
+.see-more-link {
+  color: var(--button-color-1);
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* how you use instagram styles */
+.how-you-use-instagram-container {
+  margin: 18px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  span {
+    color: var(--primary-color);
+    font-size: 16px;
+  }
+
+  h5 {
+    color: var(--main-text-color);
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    font-size: 17px;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.212);
+      border-radius: 10px;
+    }
+  }
+}
+
+/* who can see content styles */
+.who-can-see-content-container {
+  margin: 18px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+
+  span {
+    color: var(--primary-color);
+    font-size: 16px;
+  }
+
+  h5 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    color: var(--main-text-color);
+    font-size: 17px;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.212);
+      border-radius: 10px;
+    }
+  }
+}

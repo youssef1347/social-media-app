@@ -23,7 +23,7 @@ async function register(req, res) {
         const existUser = await User.findOne({ email: value.email });
 
         if (existUser) {
-            return res.status(400).json({ message: 'this email already exists' });
+            return res.status(409).json({ message: 'this email already exists' });
         };
 
         //hashing password
@@ -54,7 +54,10 @@ async function register(req, res) {
 
 async function sendOtp(req, res) {
     try {
+        // console.log(req);
+        console.log(req.body);
         const { email } = req.body;
+        if (!email) return res.status(400).json({ message: 'no email detected' });
 
         // find the user
         const user = await User.findOne({ email });
@@ -123,7 +126,7 @@ async function verifyOtp(req, res) {
         // store refresh token in httpOnly cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: process.env.PRODUCTION,
+            secure: false,
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
@@ -199,9 +202,9 @@ async function logout(req, res) {
             secure: process.env.PRODUCTION === 'production',
             sameSite: 'strict',
         });
-        res.status(200).json({ message: 'logged out successfully', id: req.user.id });
+        res.status(200).json({ message: 'logged out successfully' });
     } catch (error) {
-        console.log(error); 
+        console.log(error);
         res.status(500).json({ message: 'internal server error' });
     }
 }
@@ -301,20 +304,19 @@ async function generateAccessToken(req, res) {
         // get refresh token from cookie
         const refreshToken = req.cookies.refreshToken;
 
-        if (!refreshToken) return res.status(401).json({ message: 'refresh token is missing' });
+        if (!refreshToken) return res.status(401).json({ message: "no refresh token provided" });
 
         // verify refresh token
         const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
         // find the user
         const user = await User.findById(payload.id);
-        if (!user) return res.status(401).json({ message: 'unauthorized' });
+        if (!user) return res.status(401).json({ message: 'no refresh token provided' });
 
         // generate new access token
-        // const accessToken = jwt.sign({ id: user._id },
-        //     process.env.ACCESS_TOKEN_SECRET,
-        //     { expiresIn: '15m' });
-        const { accessToken } = generateTokens(user);
+        const accessToken = jwt.sign({ id: user._id },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '5m' });
 
         res.json({ accessToken });
     } catch (error) {

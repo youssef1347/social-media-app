@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Register } from "./pages/Register/Register";
 import { ToastContainer } from "react-toastify";
@@ -11,8 +12,19 @@ import { Home } from "./pages/Home/Home";
 import { CreatePost } from "./pages/CreatePost/CreatePost";
 import { ResetPassword } from "./pages/ResetPassword/ResetPassword";
 import { Profile } from "./pages/Profile/Profile";
+import { EditProfile } from "./pages/EditProfile/EditProfile";
+import { AccountPrivacy } from "./pages/AccountPrivacy/AccountPrivacy";
+import { ThemeContext } from "./context/ThemeContext.jsx";
+import "./index.css";
+import { CloseFriends } from "./pages/CloseFriends/CloseFriends.jsx";
 
 export const App = () => {
+  const { darkTheme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    document.body.classList.toggle("dark", localStorage.getItem("darkTheme") === "true");
+  }, [darkTheme]);
+
   return (
     <>
       <ToastContainer position="top-left" />
@@ -21,14 +33,19 @@ export const App = () => {
       {/* auth pages routes */}
 
       <Routes>
-        <Route path="/" Component={Home} />
-        <Route path="/create-post" Component={CreatePost} />
+        {/* if user isn't logged in show auth pages */}
         <Route path="/register" Component={Register} />
         <Route path="/login" Component={Login} />
         <Route path="/verify-email" Component={VerifyEmail} />
         <Route path="/forgot-password" Component={ForgotPassword} />
         <Route path="/reset-password" Component={ResetPassword} />
-        <Route path="/profile/:id" Component={Profile} />
+
+        <Route path="/" Component={Home} />
+        <Route path="/create-post" Component={CreatePost} />
+        <Route path="/:id" Component={Profile} />
+        <Route path="/settings/edit-profile" Component={EditProfile} />
+        <Route path="/settings/account-privacy" Component={AccountPrivacy} />
+        <Route path="/settings/close-friends" Component={CloseFriends} />
       </Routes>
     </>
   );

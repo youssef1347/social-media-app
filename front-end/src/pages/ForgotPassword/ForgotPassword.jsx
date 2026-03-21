@@ -3,7 +3,7 @@ import "./ForgotPassword.css";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { Inputs } from "../../components/Inputs/Inputs";
-import { api } from "../../utils/api";
+import { api } from "../../utils/APIs/api";
 import Spinner from "react-bootstrap/Spinner";
 import toast from "react-hot-toast";
 
@@ -55,47 +55,49 @@ export const ForgotPassword = () => {
   }
 
   return (
-    <div className="forgot-password-page-container">
-      {/* back icon container */}
-      <div className="forgot-password-back-icon-container">
-        <IoIosArrowBack
-          onClick={handleBack}
-          className="forgot-password-back-icon"
-        />
-      </div>
-      {/* text container */}
-      <div className="forgot-password-text-container">
-        <h2>Find your account</h2>
-        <h4>Enter your email</h4>
-      </div>
-
-      <form onSubmit={handleForgotPassword} className="forgot-password-form">
-        {/* input */}
-        <div className="forgot-password-input-container">
-          <Inputs
-            type="email"
-            id="email"
-            labelValue="Email"
-            name="email"
-            inputRef={emailRef}
-            errorMessage={isError}
+    <div className="forgot-password-main-container">
+      <div className="forgot-password-page-container">
+        {/* back icon container */}
+        <div className="forgot-password-back-icon-container">
+          <IoIosArrowBack
+            onClick={handleBack}
+            className="forgot-password-back-icon"
           />
         </div>
+        {/* text container */}
+        <div className="forgot-password-text-container">
+          <h2>Find your account</h2>
+          <h4>Enter your email</h4>
+        </div>
 
-        {/* continue button */}
-        <button
-          disabled={loading}
-          className="forgot-password-btn"
-          type="submit"
-          style={
-            loading
-              ? { cursor: "not-allowed", backgroundColor: "#3b48fc3d" }
-              : {}
-          }
-        >
-          {loading ? <Spinner animation="border" size="sm" /> : "Continue"}
-        </button>
-      </form>
+        <form onSubmit={handleForgotPassword} className="forgot-password-form">
+          {/* input */}
+          <div className="forgot-password-input-container">
+            <Inputs
+              type="email"
+              id="email"
+              labelValue="Email"
+              name="email"
+              inputRef={emailRef}
+              errorMessage={isError}
+            />
+          </div>
+
+          {/* continue button */}
+          <button
+            disabled={loading}
+            className="forgot-password-btn"
+            type="submit"
+            style={
+              loading
+                ? { cursor: "not-allowed", backgroundColor: "#3b48fc3d" }
+                : {}
+            }
+          >
+            {loading ? <Spinner animation="border" size="sm" /> : "Continue"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

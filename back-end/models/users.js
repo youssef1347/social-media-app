@@ -14,13 +14,17 @@ const userSchema = mongoose.Schema({
     resetPasswordExpires: { type: Date },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    closeFriends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
     repostedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
-    privateAccount: {type: Boolean, default: false},
-    avatar: { type: String },
+    savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
+    privateAccount: { type: Boolean, default: false },
+    avatar: { type: String, default: 'uploads/default-profile-pic.jpg' },
     bio: { type: String, default: '' },
     blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
+
+
 
 const User = mongoose.model("User", userSchema);
 

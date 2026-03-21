@@ -1,15 +1,18 @@
 /* navbar container styles */
 .navbar-container {
+    z-index: 10000;
     display: flex;
     flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.719);
-    gap: 5px;
+    background-color: var(--main-bg-color);
     padding-left: 20px;
     width: 70px;
     overflow: hidden;
     transition: width 0.3s ease;
 }
-.navbar-container:hover {
+.navbar-container-active:hover {
+    width: 200px;
+}
+.navbar-container-static {
     width: 200px;
 }
 
@@ -17,11 +20,11 @@
 .navbar-container div {
     display: flex;
     gap: 15px;
-    margin: 10px 0;
+    margin: 9px 0;
     width: min-content;
     padding: 8px;
     box-sizing: border-box;
-    color: white;
+    color: var(--main-text-color);
     align-items: center;
 }
 
@@ -52,14 +55,16 @@
 .navbar-container h5 {
     white-space: nowrap;
     font-size: 17px;
-    transform: translateX(-200px);
     transition: transform 0.3s ease;
 }
+.navbar-container-active h5 {
+    transform: translateX(-200px);
+}
 
-.navbar-container:hover h5 {
+.navbar-container-active:hover h5 {
     transform: translateX(0);
 }
-.navbar-container div:hover {
+.navbar-container-active div:hover {
     background-color: rgba(255, 255, 255, 0.212);
     border-radius: 10px;
 }
@@ -70,4 +75,51 @@
     width: 30px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.notifications-link-container {
+    cursor: pointer;
+}
+
+/* main container */
+.navbar-main-container {
+    display: flex;
+}
+
+/* menu modal styles */
+.menu-modal-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    gap: 10px;
+    background-color: var(--modal-bg-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    bottom: 60px;
+    left: 15px;
+    z-index: 1000000;
+
+    h6 {
+        color: var(--main-text-color);
+        margin: 13px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .modal-divider {
+        height: 3px;
+        width: 200px;
+        background-color: rgba(128, 128, 128, 0.329);
+        margin: 10px 0;
+        padding: 0;
+    }
+
+
+    .navbar-moon-icon {
+        font-size: 30px;
+    }
 }

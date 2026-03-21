@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+.account-privacy-main-container {
+  display: flex;
+  background-color: var(--main-bg-color);
+}
+.account-privacy-container {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* text styles */
+.account-privacy-container h4 {
+  color: var(--main-text-color);
+  margin-top: 40px;
+  margin-bottom: 0;
+  margin-right: 360px;
+}
+.account-privacy-container .text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+.account-privacy-container p {
+  font-size: 13px;
+  color: rgba(128, 128, 128, 0.87);
+  margin: 0 40px;
+}
+
+.account-privacy-check {
+  border: 1px solid rgba(169, 169, 169, 0.295);
+  border-radius: 13px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 40px;
+  width: 550px;
+  color: rgba(128, 128, 128, 0.87);
+}
+
+/* modal styles */
+.change-privacy-modal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  background-color: var(--modal-bg-color);
+  border-radius: 13px;
+
+  h3 {
+    color: var(--main-text-color);
+    text-align: center;
+    font-size: 24px;
+    font-family: "Nunito", sans-serif;
+    margin: 20px;
+  }
+
+  h5 {
+    color: var(--main-text-color);
+    font-size: 17px;
+    display: flex;
+    gap: 20px;
+    margin: 20px;
+    margin-bottom: 10px;
+  }
+
+  div {
+    margin: 20px 0;
+  }
+
+  p {
+    font-family: "Nunito", sans-serif;
+  }
+}
+.change-privacy-details {
+  display: flex;
+  flex-direction: column;
+}
+.blur {
+  filter: brightness(50%);
+}
+
+/* icons styles */
+.change-privacy-icon {
+  font-size: 26px;
+}
+
+/* buttons styles */
+.change-privacy-buttons-container {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    border: none;
+    background-color: transparent;
+    color: var(--main-text-color);
+    &:nth-child(2) {
+      color: var(--button-color-1) !important;
+      font-size: 16px;
+      font-size: 16px;
+    }
+  }
+
+  .modal-divider {
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.329);
+    margin: 10px 0;
+    padding: 0;
+  }
+}
